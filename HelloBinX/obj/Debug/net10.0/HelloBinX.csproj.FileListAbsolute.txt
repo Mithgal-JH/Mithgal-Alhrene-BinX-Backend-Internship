@@ -1,0 +1,14 @@
+C:\Backend Internship\Hellobinx\bin\Debug\net10.0\HelloBinX.exe
+C:\Backend Internship\Hellobinx\bin\Debug\net10.0\HelloBinX.deps.json
+C:\Backend Internship\Hellobinx\bin\Debug\net10.0\HelloBinX.runtimeconfig.json
+C:\Backend Internship\Hellobinx\bin\Debug\net10.0\HelloBinX.dll
+C:\Backend Internship\Hellobinx\bin\Debug\net10.0\HelloBinX.pdb
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.GeneratedMSBuildEditorConfig.editorconfig
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.AssemblyInfoInputs.cache
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.AssemblyInfo.cs
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.csproj.CoreCompileInputs.cache
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.dll
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\refint\HelloBinX.dll
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.pdb
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.genruntimeconfig.cache
+C:\Backend Internship\Hellobinx\obj\Debug\net10.0\ref\HelloBinX.dll
