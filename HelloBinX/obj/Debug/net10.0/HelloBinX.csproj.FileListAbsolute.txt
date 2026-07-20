@@ -12,3 +12,4 @@ C:\Backend Internship\Hellobinx\obj\Debug\net10.0\refint\HelloBinX.dll
 C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.pdb
 C:\Backend Internship\Hellobinx\obj\Debug\net10.0\HelloBinX.genruntimeconfig.cache
 C:\Backend Internship\Hellobinx\obj\Debug\net10.0\ref\HelloBinX.dll
+C:\Backend Internship\HelloBinX\obj\Debug\net10.0\HelloBinX.sourcelink.json
