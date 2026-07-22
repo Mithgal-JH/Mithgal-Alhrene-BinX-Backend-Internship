@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Backend Internship\\HelloBinX\\tasks\\week 1\\day 2\\hellobinx-day2\\HelloBinX-Day2.csproj": {}
+    "C:\\Backend Internship\\HelloBinX\\Tasks\\WEEK 1\\Day 2\\HelloBinX-Day2\\HelloBinX-Day2.csproj": {}
   },
   "projects": {
-    "C:\\Backend Internship\\HelloBinX\\tasks\\week 1\\day 2\\hellobinx-day2\\HelloBinX-Day2.csproj": {
+    "C:\\Backend Internship\\HelloBinX\\Tasks\\WEEK 1\\Day 2\\HelloBinX-Day2\\HelloBinX-Day2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Backend Internship\\HelloBinX\\tasks\\week 1\\day 2\\hellobinx-day2\\HelloBinX-Day2.csproj",
+        "projectUniqueName": "C:\\Backend Internship\\HelloBinX\\Tasks\\WEEK 1\\Day 2\\HelloBinX-Day2\\HelloBinX-Day2.csproj",
         "projectName": "HelloBinX-Day2",
-        "projectPath": "C:\\Backend Internship\\HelloBinX\\tasks\\week 1\\day 2\\hellobinx-day2\\HelloBinX-Day2.csproj",
+        "projectPath": "C:\\Backend Internship\\HelloBinX\\Tasks\\WEEK 1\\Day 2\\HelloBinX-Day2\\HelloBinX-Day2.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Backend Internship\\HelloBinX\\tasks\\week 1\\day 2\\hellobinx-day2\\obj\\",
+        "outputPath": "C:\\Backend Internship\\HelloBinX\\Tasks\\WEEK 1\\Day 2\\HelloBinX-Day2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
