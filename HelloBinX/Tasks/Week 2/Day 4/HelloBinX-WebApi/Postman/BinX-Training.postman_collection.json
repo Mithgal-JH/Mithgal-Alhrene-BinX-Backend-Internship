@@ -1,0 +1,48 @@
+{
+  "info": {
+    "_postman_id": "e5e85b99-6956-4a1f-902c-32bac63ab468",
+    "name": "BinX-Training",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51714834",
+    "_collection_link": "https://go.postman.co/collection/51714834-e5e85b99-6956-4a1f-902c-32bac63ab468?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Minimal API: GetAll",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Minimal API: Get By ID",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Controller: GetAll",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Controller: Get By ID",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
