@@ -1,0 +1,6 @@
+@HelloBinX_Day5_HostAddress = http://localhost:5112
+
+GET {{HelloBinX_Day5_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
