@@ -31,7 +31,7 @@ The first week focused on building the foundation required for backend developme
 - Git and GitHub workflow
 
 📂 **Documentation:**  
-[View Week 1](./HelloBinX/Tasks/Week%201/README.md)
+[View Week 1](./HelloBinX/Tasks/WEEK%201/README.md)
 
 ---
 
