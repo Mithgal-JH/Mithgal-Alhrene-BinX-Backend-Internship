@@ -1,13 +1,14 @@
 using CardiacPatientMonitoringSystem.Data;
 using Microsoft.EntityFrameworkCore;
-using CardiacPatientMonitoringSystem.Services;
-using CardiacPatientMonitoringSystem.Services.Interfaces;
+using CardiacPatientMonitoringSystem.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IPatientService, PatientService>();
+// Registers application services for dependency injection.
+builder.Services.AddApplicationServices();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
