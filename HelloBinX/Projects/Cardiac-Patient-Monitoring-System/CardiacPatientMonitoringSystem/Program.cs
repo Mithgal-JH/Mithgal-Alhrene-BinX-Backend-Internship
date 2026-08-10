@@ -1,9 +1,13 @@
 using CardiacPatientMonitoringSystem.Data;
 using Microsoft.EntityFrameworkCore;
+using CardiacPatientMonitoringSystem.Services;
+using CardiacPatientMonitoringSystem.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
