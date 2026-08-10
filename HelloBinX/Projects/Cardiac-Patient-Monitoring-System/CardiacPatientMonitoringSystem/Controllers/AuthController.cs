@@ -1,7 +1,6 @@
 using CardiacPatientMonitoringSystem.DTOs.Auth;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
@@ -29,6 +28,25 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             message = "User registered successfully."
+        });
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto dto)
+    {
+        var token = await _authService.LoginAsync(dto);
+
+        if (token is null)
+        {
+            return Unauthorized(new
+            {
+                message = "Invalid email or password."
+            });
+        }
+
+        return Ok(new
+        {
+            token
         });
     }
 }

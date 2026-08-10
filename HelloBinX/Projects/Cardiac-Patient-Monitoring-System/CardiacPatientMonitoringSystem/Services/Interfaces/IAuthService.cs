@@ -6,4 +6,6 @@ namespace CardiacPatientMonitoringSystem.Services.Interfaces;
 public interface IAuthService
 {
     Task<IdentityResult> RegisterAsync(RegisterDto dto);
+
+    Task<string?> LoginAsync(LoginDto dto);
 }
