@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMedicationService, MedicationService>();
         services.AddScoped<IPatientMedicationService, PatientMedicationService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<IVitalSignService, VitalSignService>();
 
         return services;
     }
