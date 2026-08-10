@@ -1,0 +1,648 @@
+{
+  "info": {
+    "_postman_id": "51c67a17-70c0-4bd5-8177-f433452ed57e",
+    "name": "Cardiac Patient Monitoring System API",
+    "description": "Postman collection for the Cardiac Patient Monitoring System API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5180/api",
+      "type": "string"
+    },
+    {
+      "key": "patientId",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "doctorId",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "medicationId",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "patientMedicationId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "appointmentId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "vitalSignId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": ["{{baseUrl}}", "patients"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": ["{{baseUrl}}", "patients", "{{patientId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicalRecordNumber\": \"MRN-0002\",\n  \"firstName\": \"Khaled\",\n  \"lastName\": \"Ahmad\",\n  \"dateOfBirth\": \"1988-10-20\",\n  \"gender\": \"Male\",\n  \"phone\": \"0599444444\",\n  \"email\": \"khaled.ahmad@example.com\",\n  \"address\": \"Hebron, Palestine\",\n  \"emergencyContactName\": \"Ali Ahmad\",\n  \"emergencyContactPhone\": \"0599555555\",\n  \"medicalNotes\": \"No known allergies\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": ["{{baseUrl}}", "patients"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicalRecordNumber\": \"MRN-0002\",\n  \"firstName\": \"Khaled\",\n  \"lastName\": \"Ahmad\",\n  \"dateOfBirth\": \"1988-10-20\",\n  \"gender\": \"Male\",\n  \"phone\": \"0599444444\",\n  \"email\": \"khaled.updated@example.com\",\n  \"address\": \"Hebron, Palestine\",\n  \"emergencyContactName\": \"Ali Ahmad\",\n  \"emergencyContactPhone\": \"0599555555\",\n  \"medicalNotes\": \"Updated patient information\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": ["{{baseUrl}}", "patients", "{{patientId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": ["{{baseUrl}}", "patients", "{{patientId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": ["{{baseUrl}}", "doctors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/{{doctorId}}",
+              "host": ["{{baseUrl}}", "doctors", "{{doctorId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Omar\",\n  \"lastName\": \"Hassan\",\n  \"email\": \"omar.hassan@example.com\",\n  \"phone\": \"0599222222\",\n  \"specialization\": \"Cardiology\",\n  \"licenseNumber\": \"LIC-0001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": ["{{baseUrl}}", "doctors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Omar\",\n  \"lastName\": \"Hassan\",\n  \"email\": \"omar.updated@example.com\",\n  \"phone\": \"0599333333\",\n  \"specialization\": \"Cardiology\",\n  \"licenseNumber\": \"LIC-0001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors/{{doctorId}}",
+              "host": ["{{baseUrl}}", "doctors", "{{doctorId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/{{doctorId}}",
+              "host": ["{{baseUrl}}", "doctors", "{{doctorId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Doctor - Duplicate License",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Validation test. Expected response: 409 Conflict when the license number already exists.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Omar\",\n  \"lastName\": \"Hassan\",\n  \"email\": \"omar.hassan@example.com\",\n  \"phone\": \"0599222222\",\n  \"specialization\": \"Cardiology\",\n  \"licenseNumber\": \"LIC-0001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": ["{{baseUrl}}", "doctors"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Medications",
+      "item": [
+        {
+          "name": "Get All Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications",
+              "host": ["{{baseUrl}}", "medications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Medication By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/{{medicationId}}",
+              "host": ["{{baseUrl}}", "medications", "{{medicationId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Medication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aspirin\",\n  \"genericName\": \"Acetylsalicylic Acid\",\n  \"description\": \"Used as an antiplatelet medication.\",\n  \"strength\": \"100 mg\",\n  \"dosageForm\": \"Tablet\",\n  \"manufacturer\": \"Bayer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/medications",
+              "host": ["{{baseUrl}}", "medications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Medication",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aspirin\",\n  \"genericName\": \"Acetylsalicylic Acid\",\n  \"description\": \"Updated antiplatelet medication.\",\n  \"strength\": \"81 mg\",\n  \"dosageForm\": \"Tablet\",\n  \"manufacturer\": \"Bayer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/medications/{{medicationId}}",
+              "host": ["{{baseUrl}}", "medications", "{{medicationId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Medication",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/{{medicationId}}",
+              "host": ["{{baseUrl}}", "medications", "{{medicationId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient Medications",
+      "item": [
+        {
+          "name": "Get All Patient Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications",
+              "host": ["{{baseUrl}}", "patientmedications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Medication By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/{{patientMedicationId}}",
+              "host": [
+                "{{baseUrl}}",
+                "patientmedications",
+                "{{patientMedicationId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient Medication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "PatientId and MedicationId must reference existing records.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": 2,\n  \"medicationId\": 2,\n  \"dosage\": \"50 mg\",\n  \"frequency\": \"Twice daily\",\n  \"route\": \"Oral\",\n  \"startDate\": \"2026-08-10\",\n  \"endDate\": null,\n  \"status\": \"Active\",\n  \"notes\": \"Take after meals\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications",
+              "host": ["{{baseUrl}}", "patientmedications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient Medication - Invalid Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Validation test. Expected response: 400 Bad Request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": 9999,\n  \"medicationId\": 2,\n  \"dosage\": \"50 mg\",\n  \"frequency\": \"Once daily\",\n  \"route\": \"Oral\",\n  \"startDate\": \"2026-08-10\",\n  \"endDate\": null,\n  \"status\": \"Active\",\n  \"notes\": \"Invalid patient test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications",
+              "host": ["{{baseUrl}}", "patientmedications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient Medication",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dosage\": \"25 mg\",\n  \"frequency\": \"Once daily\",\n  \"route\": \"Oral\",\n  \"startDate\": \"2026-08-10\",\n  \"endDate\": null,\n  \"status\": \"Active\",\n  \"notes\": \"Updated dosage instructions\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/{{patientMedicationId}}",
+              "host": [
+                "{{baseUrl}}",
+                "patientmedications",
+                "{{patientMedicationId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient Medication",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/{{patientMedicationId}}",
+              "host": [
+                "{{baseUrl}}",
+                "patientmedications",
+                "{{patientMedicationId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Get All Appointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": ["{{baseUrl}}", "appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Appointment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+              "host": ["{{baseUrl}}", "appointments", "{{appointmentId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "PatientId and DoctorId must reference existing records.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": 2,\n  \"doctorId\": 2,\n  \"appointmentDate\": \"2026-08-15T10:00:00Z\",\n  \"appointmentType\": \"Cardiology Consultation\",\n  \"status\": \"Scheduled\",\n  \"reason\": \"Routine cardiac follow-up\",\n  \"notes\": \"Bring previous medical reports\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": ["{{baseUrl}}", "appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctorId\": 2,\n  \"appointmentDate\": \"2026-08-15T11:00:00Z\",\n  \"appointmentType\": \"Cardiology Follow-up\",\n  \"status\": \"Completed\",\n  \"reason\": \"Routine cardiac follow-up\",\n  \"notes\": \"Follow-up completed successfully\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+              "host": ["{{baseUrl}}", "appointments", "{{appointmentId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Appointment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+              "host": ["{{baseUrl}}", "appointments", "{{appointmentId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vital Signs",
+      "item": [
+        {
+          "name": "Get All Vital Signs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns",
+              "host": ["{{baseUrl}}", "vitalsigns"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vital Sign By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns/{{vitalSignId}}",
+              "host": ["{{baseUrl}}", "vitalsigns", "{{vitalSignId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vital Sign",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "PatientId must reference an existing patient.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": 2,\n  \"heartRate\": 72,\n  \"systolicBloodPressure\": 120,\n  \"diastolicBloodPressure\": 80,\n  \"respiratoryRate\": 16,\n  \"temperature\": 36.8,\n  \"oxygenSaturation\": 98,\n  \"weight\": 75.5,\n  \"recordedAt\": \"2026-08-10T17:30:00Z\",\n  \"notes\": \"Normal vital signs\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns",
+              "host": ["{{baseUrl}}", "vitalsigns"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vital Sign",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns/{{vitalSignId}}",
+              "host": ["{{baseUrl}}", "vitalsigns", "{{vitalSignId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
