@@ -14,3 +14,7 @@ obj/
 
 # Rider
 .idea/
+
+
+# Development secrets
+appsettings.Development.json

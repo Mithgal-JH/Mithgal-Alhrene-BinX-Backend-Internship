@@ -1,26 +1,29 @@
 # BinX Tech — Backend Development Internship
 
-Welcome to my Backend Development Internship repository at **BinX Tech**.
+Welcome to my **Backend Development Internship** repository at **BinX Tech**.
 
 This repository contains my practical work, daily tasks, projects, documentation, and learning progress throughout the **Backend Development (.NET)** internship.
 
 ---
 
-## Internship Overview
+## 📊 Weekly Progress
 
-The internship focuses on backend development using the .NET ecosystem, with practical work covering C#, ASP.NET Core, Entity Framework Core, SQL Server, REST APIs, authentication, security, testing, and related backend technologies.
-
-The internship is structured into multiple weeks, with each week building on the concepts and practical work from the previous one.
+| Week  | Focus                                  |     Status     | Documentation                                       |
+| :---: | -------------------------------------- | :------------: | --------------------------------------------------- |
+| **1** | C# & .NET Foundations                  |  ✅ Completed  | [View Week 1](./HelloBinX/Tasks/WEEK%201/README.MD) |
+| **2** | Advanced C# & ASP.NET Core Foundations |  ✅ Completed  | [View Week 2](./HelloBinX/Tasks/Week%202/README.md) |
+| **3** | REST API, EF Core & CRUD               |  ✅ Completed  | [View Week 3](./HelloBinX/Tasks/Week%203/README.md) |
+| **4** | ASP.NET Core Identity & Authentication | 🟡 In Progress | [View Week 4](./HelloBinX/Tasks/Week%204/README.md) |
 
 ---
 
-## Weekly Progress
+## 🗓️ Weekly Overview
 
 ### Week 1 — C# & .NET Foundations
 
 The first week focused on building the foundation required for backend development.
 
-**Main topics included:**
+**Main topics:**
 
 - .NET development environment
 - C# fundamentals
@@ -30,7 +33,7 @@ The first week focused on building the foundation required for backend developme
 - `async/await`
 - Git and GitHub workflow
 
-📂 **Documentation:**  
+📂 **Documentation:**
 [View Week 1](./HelloBinX/Tasks/WEEK%201/README.MD)
 
 ---
@@ -39,7 +42,7 @@ The first week focused on building the foundation required for backend developme
 
 The second week moved into more advanced C# concepts and the fundamentals of ASP.NET Core.
 
-**Main topics included:**
+**Main topics:**
 
 - Generics
 - Advanced LINQ
@@ -51,8 +54,7 @@ The second week moved into more advanced C# concepts and the fundamentals of ASP
 - Middleware
 - Dependency Injection
 
-📂 **Documentation:**  
-[View Week 2](./HelloBinX/Tasks/Week%202/README.md)
+📂 [View Week 2 Documentation](./HelloBinX/Tasks/Week%202/README.md)
 
 ---
 
@@ -60,7 +62,7 @@ The second week moved into more advanced C# concepts and the fundamentals of ASP
 
 Week 3 focused on building a practical backend REST API and connecting it to a relational database.
 
-**Main topics included:**
+**Main topics:**
 
 - REST API design
 - HTTP methods and status codes
@@ -75,19 +77,17 @@ Week 3 focused on building a practical backend REST API and connecting it to a r
 - Postman testing
 - API documentation
 
-**Main project:**  
-Book Management REST API
+**Main project:** Book Management REST API
 
-📂 **Documentation:**  
-[View Week 3](./HelloBinX/Tasks/Week%203/README.md)
+📂 [View Week 3 Documentation](./HelloBinX/Tasks/Week%203/README.md)
 
 ---
 
 ### Week 4 — ASP.NET Core Identity & Authentication
 
-Week 4 is currently in progress and focuses on authentication and API security.
+Week 4 focuses on authentication and API security.
 
-**Current topics include:**
+**Main topics:**
 
 - ASP.NET Core Identity
 - `IdentityUser`
@@ -101,12 +101,11 @@ Week 4 is currently in progress and focuses on authentication and API security.
 - Authorization
 - Protected API endpoints
 
-📂 **Documentation:**  
-[View Week 4](./HelloBinX/Tasks/Week%204/README.md)
+📂 [View Week 4 Documentation](./HelloBinX/Tasks/Week%204/README.md)
 
 ---
 
-## Repository Structure
+## 📁 Repository Structure
 
 ```text
 HelloBinX/
@@ -141,4 +140,19 @@ HelloBinX/
     │
     └── Week 4/
         ├── README.md
+<<<<<<< HEAD
         └── Day 1/
+=======
+        ├── Day 1/
+        └── Day 2/
+```
+
+---
+
+## 🚀 Internship Progress
+
+**Weeks Completed:** 3 / 10  
+**Current:** Week 4 — Day 2  
+**Track:** Backend Development (.NET)
+
+> > > > > > > dc17ecb (Complete Week 4 Day 2 JWT authentication)
