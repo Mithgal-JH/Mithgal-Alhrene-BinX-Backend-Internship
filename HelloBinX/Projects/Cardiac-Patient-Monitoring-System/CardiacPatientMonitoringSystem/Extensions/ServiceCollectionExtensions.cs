@@ -11,7 +11,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IDoctorService, DoctorService>();
         services.AddScoped<IMedicationService, MedicationService>();
-
+        services.AddScoped<IPatientMedicationService, PatientMedicationService>();
+        
         return services;
     }
 }
