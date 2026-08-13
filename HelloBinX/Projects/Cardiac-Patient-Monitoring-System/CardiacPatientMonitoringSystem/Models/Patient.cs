@@ -4,6 +4,8 @@ public class Patient
 {
     public int PatientId { get; set; }
 
+    public string? UserId { get; set; }
+
     public string MedicalRecordNumber { get; set; } = string.Empty;
 
     public string FirstName { get; set; } = string.Empty;

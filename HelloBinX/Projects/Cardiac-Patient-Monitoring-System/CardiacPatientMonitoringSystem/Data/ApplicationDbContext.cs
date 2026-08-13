@@ -27,6 +27,14 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
         {
             entity.HasKey(p => p.PatientId);
 
+            entity.HasIndex(p => p.UserId)
+                .IsUnique();
+
+            entity.HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Patient>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.Property(p => p.MedicalRecordNumber)
                 .HasMaxLength(50)
                 .IsRequired();
@@ -73,6 +81,14 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
         modelBuilder.Entity<Doctor>(entity =>
         {
             entity.HasKey(d => d.DoctorId);
+
+            entity.HasIndex(d => d.UserId)
+                .IsUnique();
+
+            entity.HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Doctor>(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(d => d.FirstName)
                 .HasMaxLength(100)
