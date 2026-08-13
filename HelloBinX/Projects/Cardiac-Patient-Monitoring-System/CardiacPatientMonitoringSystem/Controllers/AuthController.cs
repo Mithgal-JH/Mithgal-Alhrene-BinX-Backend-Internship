@@ -1,6 +1,8 @@
 using CardiacPatientMonitoringSystem.DTOs.Auth;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using CardiacPatientMonitoringSystem.DTOs;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
@@ -49,4 +51,37 @@ public class AuthController : ControllerBase
             token
         });
     }
+
+
+
+    // // Temporary endpoint used to assign a role to an existing user during development/testing.
+    // [HttpPost("assign-role")]
+    // public async Task<IActionResult> AssignRole(AssignRoleDto dto)
+    // {
+    //     // Find the user by email.
+    //     var user = await _userManager.FindByEmailAsync(dto.Email);
+
+    //     if (user == null)
+    //         return NotFound("User not found.");
+
+    //     // Check that the requested role exists.
+    //     if (!await _roleManager.RoleExistsAsync(dto.Role))
+    //         return BadRequest("Role does not exist.");
+
+    //     // Check whether the user already has the role.
+    //     if (await _userManager.IsInRoleAsync(user, dto.Role))
+    //         return BadRequest("User already has this role.");
+
+    //     // Assign the role to the user.
+    //     var result = await _userManager.AddToRoleAsync(user, dto.Role);
+
+    //     if (!result.Succeeded)
+    //         return BadRequest(result.Errors);
+
+    //     return Ok(new
+    //     {
+    //         message = $"Role '{dto.Role}' assigned successfully to '{dto.Email}'."
+    //     });
+    // }
+
 }

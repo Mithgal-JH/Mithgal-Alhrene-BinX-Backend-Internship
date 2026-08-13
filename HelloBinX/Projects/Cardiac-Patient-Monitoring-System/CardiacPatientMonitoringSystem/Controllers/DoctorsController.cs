@@ -1,9 +1,11 @@
 using CardiacPatientMonitoringSystem.DTOs.Doctors;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class DoctorsController : ControllerBase
@@ -34,6 +36,7 @@ public class DoctorsController : ControllerBase
         return Ok(doctor);
     }
 
+    [Authorize(Roles = "Doctor")]
     [HttpPost]
     public async Task<ActionResult<DoctorResponseDto>> Create(
         CreateDoctorDto dto)
@@ -52,6 +55,8 @@ public class DoctorsController : ControllerBase
             result.Doctor);
     }
 
+
+    [Authorize(Roles = "Doctor")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<DoctorResponseDto>> Update(
         int id,
@@ -71,6 +76,8 @@ public class DoctorsController : ControllerBase
         return Ok(result.Doctor);
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

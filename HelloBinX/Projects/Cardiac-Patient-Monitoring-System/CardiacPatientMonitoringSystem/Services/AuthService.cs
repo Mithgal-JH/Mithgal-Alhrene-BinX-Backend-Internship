@@ -54,6 +54,11 @@ public class AuthService : IAuthService
             return null;
         }
 
+        // get all roles assigned to the authenticated user
+        var roles = await _userManager.GetRolesAsync(user);
+
+
+
         // Define the claims that will be included in the JWT
         var claims = new List<Claim>
         {
@@ -61,6 +66,11 @@ public class AuthService : IAuthService
             new(JwtRegisteredClaimNames.Email, user.Email!)
         };
 
+        // add the user's roles to the JWT as role claims
+        foreach(var role in roles )
+        {
+            claims.Add(new Claim(ClaimTypes.Role,role));
+        }
         // Create the signing key used to secure the JWT
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -84,4 +94,5 @@ public class AuthService : IAuthService
         // Serialize the JWT into a string that can be returned to the client
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }
