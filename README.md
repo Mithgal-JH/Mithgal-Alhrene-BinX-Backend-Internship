@@ -8,12 +8,12 @@ This repository contains my practical work, daily tasks, projects, documentation
 
 ## 📊 Weekly Progress
 
-| Week  | Focus                                  |     Status     | Documentation                                       |
-| :---: | -------------------------------------- | :------------: | --------------------------------------------------- |
-| **1** | C# & .NET Foundations                  |  ✅ Completed  | [View Week 1](./HelloBinX/Tasks/WEEK%201/README.MD) |
-| **2** | Advanced C# & ASP.NET Core Foundations |  ✅ Completed  | [View Week 2](./HelloBinX/Tasks/Week%202/README.md) |
-| **3** | REST API, EF Core & CRUD               |  ✅ Completed  | [View Week 3](./HelloBinX/Tasks/Week%203/README.md) |
-| **4** | ASP.NET Core Identity & Authentication | 🟡 In Progress | [View Week 4](./HelloBinX/Tasks/Week%204/README.md) |
+| Week  | Focus | Status | Documentation |
+| :---: | ----- | :----: | :------------ |
+| **1** | C# & .NET Foundations | ✅ Completed | [View Week 1](./HelloBinX/Tasks/WEEK%201/README.MD) |
+| **2** | Advanced C# & ASP.NET Core Foundations | ✅ Completed | [View Week 2](./HelloBinX/Tasks/Week%202/README.md) |
+| **3** | REST API, EF Core & CRUD | ✅ Completed | [View Week 3](./HelloBinX/Tasks/Week%203/README.md) |
+| **4** | Authentication, Authorization & API Security | ✅ Completed | [View Week 4](./HelloBinX/Tasks/Week%204/README.md) |
 
 ---
 
@@ -33,7 +33,7 @@ The first week focused on building the foundation required for backend developme
 - `async/await`
 - Git and GitHub workflow
 
-📂 **Documentation:**
+📂 **Documentation:**  
 [View Week 1](./HelloBinX/Tasks/WEEK%201/README.MD)
 
 ---
@@ -54,7 +54,8 @@ The second week moved into more advanced C# concepts and the fundamentals of ASP
 - Middleware
 - Dependency Injection
 
-📂 [View Week 2 Documentation](./HelloBinX/Tasks/Week%202/README.md)
+📂 **Documentation:**  
+[View Week 2](./HelloBinX/Tasks/Week%202/README.md)
 
 ---
 
@@ -79,29 +80,35 @@ Week 3 focused on building a practical backend REST API and connecting it to a r
 
 **Main project:** Book Management REST API
 
-📂 [View Week 3 Documentation](./HelloBinX/Tasks/Week%203/README.md)
+📂 **Documentation:**  
+[View Week 3](./HelloBinX/Tasks/Week%203/README.md)
 
 ---
 
-### Week 4 — ASP.NET Core Identity & Authentication
+### Week 4 — Authentication, Authorization & API Security
 
-Week 4 focuses on authentication and API security.
+Week 4 focused on securing the ASP.NET Core Web API through authentication, authorization, validation, and security hardening.
 
 **Main topics:**
 
 - ASP.NET Core Identity
-- `IdentityUser`
-- `IdentityRole`
-- `IdentityDbContext`
 - User registration
-- `UserManager`
-- Password validation
 - Password hashing
 - JWT Authentication
-- Authorization
+- JWT claims
 - Protected API endpoints
+- Role-Based Authorization
+- Claims-Based Authorization
+- Policy-Based Authorization
+- FluentValidation
+- CORS
+- HTTPS Redirection
+- HSTS
+- Rate Limiting
+- SQL Injection review
 
-📂 [View Week 4 Documentation](./HelloBinX/Tasks/Week%204/README.md)
+📂 **Documentation:**  
+[View Week 4](./HelloBinX/Tasks/Week%204/README.md)
 
 ---
 
@@ -140,19 +147,17 @@ HelloBinX/
     │
     └── Week 4/
         ├── README.md
-<<<<<<< HEAD
-        └── Day 1/
-=======
         ├── Day 1/
-        └── Day 2/
+        ├── Day 2/
+        ├── Day 3/
+        ├── Day 4/
+        └── Day 5/
 ```
 
 ---
 
 ## 🚀 Internship Progress
 
-**Weeks Completed:** 3 / 10  
-**Current:** Week 4 — Day 2  
-**Track:** Backend Development (.NET)
-
-> > > > > > > dc17ecb (Complete Week 4 Day 2 JWT authentication)
+Weeks Completed: 4 / 10
+Current: Week 4 — Completed
+Track: Backend Development (.NET)
