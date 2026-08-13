@@ -36,7 +36,7 @@ public class DoctorsController : ControllerBase
         return Ok(doctor);
     }
 
-    [Authorize(Roles = "Doctor")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<DoctorResponseDto>> Create(
         CreateDoctorDto dto)

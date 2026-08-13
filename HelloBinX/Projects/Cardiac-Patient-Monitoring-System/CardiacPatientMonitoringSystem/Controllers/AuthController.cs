@@ -1,8 +1,6 @@
 using CardiacPatientMonitoringSystem.DTOs.Auth;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using CardiacPatientMonitoringSystem.DTOs;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
@@ -17,10 +15,12 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    [HttpPost("register/patient")]
+    public async Task<IActionResult> RegisterPatient(
+    RegisterPatientDto dto)
     {
-        var result = await _authService.RegisterAsync(dto);
+        var result =
+            await _authService.RegisterPatientAsync(dto);
 
         if (!result.Succeeded)
         {
@@ -29,7 +29,25 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            message = "User registered successfully."
+            message = "Patient registered successfully."
+        });
+    }
+
+    [HttpPost("register/doctor")]
+    public async Task<IActionResult> RegisterDoctor(
+        RegisterDoctorDto dto)
+    {
+        var result =
+            await _authService.RegisterDoctorAsync(dto);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok(new
+        {
+            message = "Doctor registered successfully."
         });
     }
 
