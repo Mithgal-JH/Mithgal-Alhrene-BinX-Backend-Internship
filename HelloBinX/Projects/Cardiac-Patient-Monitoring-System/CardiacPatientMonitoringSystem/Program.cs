@@ -15,13 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 
-// Configure API rate limiting
+// Configure rate limiting
 builder.Services.AddRateLimiter(options =>
 {
-    // Return 429 when the rate limit is exceeded
     options.OnRejected = async (context, cancellationToken) =>
     {
-        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.StatusCode =
+            StatusCodes.Status429TooManyRequests;
 
         await context.HttpContext.Response.WriteAsJsonAsync(new
         {
@@ -29,6 +29,7 @@ builder.Services.AddRateLimiter(options =>
         }, cancellationToken);
     };
 
+    // Limit login attempts
     options.AddFixedWindowLimiter("login", limiterOptions =>
     {
         limiterOptions.PermitLimit = 5;
@@ -36,6 +37,7 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 0;
     });
 
+    // General API limit
     options.AddFixedWindowLimiter("api", limiterOptions =>
     {
         limiterOptions.PermitLimit = 100;
@@ -45,70 +47,84 @@ builder.Services.AddRateLimiter(options =>
 });
 
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:3000",
+                "https://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 // Register FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterPatientValidator>();
 
 
-
-// Registers application services for dependency injection.
+// Register application services
 builder.Services.AddApplicationServices();
 
 
+// Configure Identity
 builder.Services
     .AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Configure ASP.NET Core Identity with users, roles, EF Core storage, and token providers
+
+// Configure database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-// Configure JWT Bearer authentication for validating access tokens
+// Configure JWT authentication
 builder.Services
     .AddAuthentication(options =>
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme =
+            JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
 
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-        )
-    };
-});
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["Jwt:Key"]!))
+        };
+    });
 
 
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Seed default application roles and admin account on startup.
+
+// Seed roles and admin account
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<IdentityRole>>();
 
-    var userManager = scope.ServiceProvider
-        .GetRequiredService<UserManager<IdentityUser>>();
-
     await IdentitySeeder.SeedRolesAsync(roleManager);
-    await IdentitySeeder.SeedAdminAsync(
-    userManager,
-    builder.Configuration);
 }
 
 
@@ -117,10 +133,29 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+
+// HTTPS and security
 app.UseHttpsRedirection();
+app.UseHsts();
+
+
+// CORS
+app.UseCors("AllowFrontend");
+
+
+// Security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+
+    await next();
+});
+
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseRateLimiter();
 
 app.MapControllers();
