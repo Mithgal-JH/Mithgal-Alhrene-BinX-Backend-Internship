@@ -87,24 +87,35 @@ public class DoctorService : IDoctorService
         );
     }
 
-    public async Task<(DoctorResponseDto? Doctor, bool LicenseExists)> UpdateAsync(
+    // Updates a doctor only if the authenticated user owns that doctor
+    public async Task<(DoctorResponseDto? Doctor, bool LicenseExists, bool NotOwner)> UpdateAsync(
         int id,
-        UpdateDoctorDto dto)
+        UpdateDoctorDto dto,
+        string userId)
     {
+        // Find the doctor by the requested DoctorId
         var doctor = await _context.Doctors
             .FirstOrDefaultAsync(d => d.DoctorId == id);
 
+        // If the doctor does not exist, return not found.
         if (doctor is null)
-            return (null, false);
+            return (null, false, false);
 
+        // Check whether the authenticated user owns this doctor.
+        if (doctor.UserId != userId)
+            return (null, false, true);
+
+        // Check whether another doctor already uses this license number.
         var licenseExists = await _context.Doctors
             .AnyAsync(d =>
                 d.LicenseNumber == dto.LicenseNumber &&
                 d.DoctorId != id);
 
+        // If another doctor already has this license number, reject the update.
         if (licenseExists)
-            return (null, true);
+            return (null, true, false);
 
+        // Update the doctor's information.
         doctor.FirstName = dto.FirstName;
         doctor.LastName = dto.LastName;
         doctor.Email = dto.Email;
@@ -112,9 +123,11 @@ public class DoctorService : IDoctorService
         doctor.Specialization = dto.Specialization;
         doctor.LicenseNumber = dto.LicenseNumber;
 
+        // Save the changes to the database
         await _context.SaveChangesAsync();
 
-        return (await GetByIdAsync(id), false);
+        // Return the updated doctor
+        return (await GetByIdAsync(id), false, false);
     }
 
     public async Task<bool> DeleteAsync(int id)

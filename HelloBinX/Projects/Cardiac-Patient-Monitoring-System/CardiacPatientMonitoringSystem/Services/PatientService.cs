@@ -97,16 +97,25 @@ public class PatientService : IPatientService
         };
     }
 
-    public async Task<PatientResponseDto?> UpdateAsync(
+    // Update patient data only for the authenticated owner
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)> UpdateAsync(
         int id,
-        UpdatePatientDto dto)
+        UpdatePatientDto dto,
+        string userId)
     {
+        // Find the patient
         var patient = await _context.Patients
             .FirstOrDefaultAsync(p => p.PatientId == id);
 
+        // Patient does not exist
         if (patient is null)
-            return null;
+            return (null, false);
 
+        // Check patient ownership
+        if (patient.UserId != userId)
+            return (null, true);
+
+        // Update patient data
         patient.MedicalRecordNumber = dto.MedicalRecordNumber;
         patient.FirstName = dto.FirstName;
         patient.LastName = dto.LastName;
@@ -119,11 +128,11 @@ public class PatientService : IPatientService
         patient.EmergencyContactPhone = dto.EmergencyContactPhone;
         patient.MedicalNotes = dto.MedicalNotes;
 
+        // Save changes
         await _context.SaveChangesAsync();
 
-        return await GetByIdAsync(id);
+        return (await GetByIdAsync(id), false);
     }
-
     public async Task<bool> DeleteAsync(int id)
     {
         var patient = await _context.Patients

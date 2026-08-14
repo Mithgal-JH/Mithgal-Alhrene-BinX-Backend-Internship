@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using CardiacPatientMonitoringSystem.DTOs.Patients;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PatientsController : ControllerBase
@@ -46,19 +49,34 @@ public class PatientsController : ControllerBase
             patient);
     }
 
+    [Authorize(Roles = "Patient")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<PatientResponseDto>> Update(
-        int id,
-        UpdatePatientDto dto)
+    int id,
+    UpdatePatientDto dto)
     {
-        var patient = await _patientService.UpdateAsync(id, dto);
+        // Get the authenticated user's ID from the JWT
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (patient is null)
+        if (userId is null)
+            return Unauthorized();
+
+        // Update patient and check ownership
+        var result = await _patientService.UpdateAsync(
+            id,
+            dto,
+            userId);
+
+        // Patient belongs to another user
+        if (result.NotOwner)
+            return Forbid();
+
+        // Patient does not exist
+        if (result.Patient is null)
             return NotFound();
 
-        return Ok(patient);
+        return Ok(result.Patient);
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

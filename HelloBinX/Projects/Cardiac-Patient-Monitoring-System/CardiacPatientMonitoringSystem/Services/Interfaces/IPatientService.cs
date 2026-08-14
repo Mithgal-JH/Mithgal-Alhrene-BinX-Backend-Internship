@@ -10,7 +10,10 @@ public interface IPatientService
 
     Task<PatientResponseDto> CreateAsync(CreatePatientDto dto);
 
-    Task<PatientResponseDto?> UpdateAsync(int id, UpdatePatientDto dto);
-
+    // Update patient data for the authenticated owner
+    Task<(PatientResponseDto? Patient, bool NotOwner)> UpdateAsync(
+        int id,
+        UpdatePatientDto dto,
+        string userId);
     Task<bool> DeleteAsync(int id);
 }
