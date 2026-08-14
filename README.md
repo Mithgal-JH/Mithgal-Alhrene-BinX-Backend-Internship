@@ -43,10 +43,10 @@ HelloBinX/
 
 Contains the weekly internship tasks, exercises, and practical learning work.
 
-📂 [View Tasks](./Tasks/README.md)
+📂 [View Tasks](./HelloBinX/Tasks/README.md)
 
 ### Projects
 
 Contains the practical backend projects developed during the internship.
 
-📂 [View Projects](./Projects/README.md)
+📂 [View Projects](./HelloBinX/Projects/README.md)
