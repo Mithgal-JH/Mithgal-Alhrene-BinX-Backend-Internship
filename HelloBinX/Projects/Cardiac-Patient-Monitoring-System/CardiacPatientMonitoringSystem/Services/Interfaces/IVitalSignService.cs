@@ -4,12 +4,29 @@ namespace CardiacPatientMonitoringSystem.Services.Interfaces;
 
 public interface IVitalSignService
 {
-    Task<IEnumerable<VitalSignResponseDto>> GetAllAsync();
+    Task<IEnumerable<VitalSignResponseDto>> GetAllAsync(
+        string userId,
+        bool isAdmin,
+        bool isDoctor);
 
-    Task<VitalSignResponseDto?> GetByIdAsync(int id);
+    Task<(VitalSignResponseDto? VitalSign, bool NotOwner)> GetByIdAsync(
+        int id,
+        string userId,
+        bool isAdmin,
+        bool isDoctor);
 
-    Task<VitalSignResponseDto?> CreateAsync(
-        CreateVitalSignDto dto);
+    Task<(VitalSignResponseDto? VitalSign, bool NotOwner)> CreateAsync(
+        CreateVitalSignDto dto,
+        string userId,
+        bool isAdmin,
+        bool isDoctor);
+
+    Task<(VitalSignResponseDto? VitalSign, bool NotOwner)> UpdateAsync(
+        int id,
+        UpdateVitalSignDto dto,
+        string userId,
+        bool isAdmin,
+        bool isDoctor);
 
     Task<bool> DeleteAsync(int id);
 }
