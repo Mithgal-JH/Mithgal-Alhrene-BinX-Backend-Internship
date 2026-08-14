@@ -6,11 +6,11 @@ This section contains my **weekly internship tasks**, practical exercises, and l
 
 ## 📊 Weekly Progress
 
-| Week  | Focus | Status | Documentation |
-| :---: | ----- | :----: | :------------ |
-| **1** | C# & .NET Foundations | ✅ Completed | [View Week 1](./Week%201/README.MD) |
-| **2** | Advanced C# & ASP.NET Core Foundations | ✅ Completed | [View Week 2](./Week%202/README.md) |
-| **3** | REST API, EF Core & CRUD | ✅ Completed | [View Week 3](./Week%203/README.md) |
+| Week  | Focus                                        |    Status    | Documentation                       |
+| :---: | -------------------------------------------- | :----------: | :---------------------------------- |
+| **1** | C# & .NET Foundations                        | ✅ Completed | [View Week 1](./WEEK%201/README.MD) |
+| **2** | Advanced C# & ASP.NET Core Foundations       | ✅ Completed | [View Week 2](./Week%202/README.md) |
+| **3** | REST API, EF Core & CRUD                     | ✅ Completed | [View Week 3](./Week%203/README.md) |
 | **4** | Authentication, Authorization & API Security | ✅ Completed | [View Week 4](./Week%204/README.md) |
 
 ---
@@ -32,7 +32,7 @@ The first week focused on building the foundation required for backend developme
 - Git and GitHub workflow
 
 📂 **Documentation:**  
-[View Week 1](./Week%201/README.MD)
+[View Week 1](./WEEK%201/README.MD)
 
 ---
 
