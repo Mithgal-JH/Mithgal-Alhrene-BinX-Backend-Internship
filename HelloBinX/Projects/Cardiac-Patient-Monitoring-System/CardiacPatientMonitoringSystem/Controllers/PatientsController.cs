@@ -37,6 +37,7 @@ public class PatientsController : ControllerBase
         return Ok(patient);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<PatientResponseDto>> Create(
         CreatePatientDto dto)
@@ -77,6 +78,8 @@ public class PatientsController : ControllerBase
 
         return Ok(result.Patient);
     }
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

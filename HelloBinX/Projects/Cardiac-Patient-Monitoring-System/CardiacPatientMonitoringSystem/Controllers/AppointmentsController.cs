@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using CardiacPatientMonitoringSystem.DTOs.Appointments;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentsController : ControllerBase
@@ -18,7 +21,15 @@ public class AppointmentsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppointmentResponseDto>>> GetAll()
     {
-        var appointments = await _appointmentService.GetAllAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+            return Unauthorized();
+
+        var appointments = await _appointmentService.GetAllAsync(
+            userId,
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
 
         return Ok(appointments);
     }
@@ -26,30 +37,56 @@ public class AppointmentsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AppointmentResponseDto>> GetById(int id)
     {
-        var appointment = await _appointmentService.GetByIdAsync(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (appointment is null)
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _appointmentService.GetByIdAsync(
+            id,
+            userId,
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
+
+        if (result.NotOwner)
+            return Forbid();
+
+        if (result.Appointment is null)
             return NotFound();
 
-        return Ok(appointment);
+        return Ok(result.Appointment);
     }
 
     [HttpPost]
     public async Task<ActionResult<AppointmentResponseDto>> Create(
         CreateAppointmentDto dto)
     {
-        var appointment = await _appointmentService.CreateAsync(dto);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (appointment is null)
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _appointmentService.CreateAsync(
+            dto,
+            userId,
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
+
+        if (result.NotOwner)
+            return Forbid();
+
+        if (result.Appointment is null)
+        {
             return BadRequest(new
             {
                 message = "Patient or doctor does not exist."
             });
+        }
 
         return CreatedAtAction(
             nameof(GetById),
-            new { id = appointment.AppointmentId },
-            appointment);
+            new { id = result.Appointment.AppointmentId },
+            result.Appointment);
     }
 
     [HttpPut("{id:int}")]
@@ -57,14 +94,28 @@ public class AppointmentsController : ControllerBase
         int id,
         UpdateAppointmentDto dto)
     {
-        var appointment = await _appointmentService.UpdateAsync(id, dto);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (appointment is null)
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _appointmentService.UpdateAsync(
+            id,
+            dto,
+            userId,
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
+
+        if (result.NotOwner)
+            return Forbid();
+
+        if (result.Appointment is null)
             return NotFound();
 
-        return Ok(appointment);
+        return Ok(result.Appointment);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

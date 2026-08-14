@@ -22,3 +22,5 @@ public class Appointment
 
     public Doctor Doctor { get; set; } = null!;
 }
+
+
