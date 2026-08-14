@@ -1,5 +1,6 @@
 using CardiacPatientMonitoringSystem.DTOs.Auth;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -16,6 +17,8 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpPost("register/patient")]
     public async Task<IActionResult> RegisterPatient(
     RegisterPatientDto dto)
@@ -34,6 +37,8 @@ public class AuthController : ControllerBase
         });
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpPost("register/doctor")]
     public async Task<IActionResult> RegisterDoctor(
         RegisterDoctorDto dto)
