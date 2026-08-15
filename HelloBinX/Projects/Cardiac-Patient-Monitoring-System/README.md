@@ -17,7 +17,7 @@ The project is built with **ASP.NET Core Web API**, **Entity Framework Core**, *
 - Entity Framework Core migrations
 - PostgreSQL database
 - Postman API collection
-- API and authorization documentation
+- API, authorization, and API testing documentation
 
 ## Roles
 
@@ -56,7 +56,7 @@ CardiacPatientMonitoringSystem/
 │   └── Interfaces/
 ├── Validation/         # FluentValidation validators
 ├── Postman/            # Postman API collection
-├── docs/               # API and authorization documentation
+├── docs/               # API, authorization, and testing documentation
 └── Program.cs          # Application configuration and startup
 ```
 
@@ -106,11 +106,25 @@ docs/API_DOCUMENTATION.md
 
 A formatted PDF version is also included in the `docs` folder.
 
-Authorization rules are documented in:
+## Authorization Documentation
+
+The project's authorization rules are documented in the final authorization matrix:
 
 ```text
-docs/AUTHORIZATION_MATRIX.md
+docs/Cardiac_Patient_Monitoring_Authorization_Matrix_FINAL.pdf
 ```
+
+The matrix describes the actual permissions for the supported roles and API resources.
+
+## Postman API Testing Scenario
+
+A documented record of the API testing process, including Postman screenshots and the tested scenarios, is available in:
+
+```text
+docs/Cardiac_API_Postman_Scenario_With_Explained_Screenshots.pdf
+```
+
+This document provides evidence of the endpoint testing performed during development, including successful CRUD operations and authentication/authorization-related testing.
 
 ## Postman
 
@@ -134,4 +148,4 @@ This includes the ERD and normalization documentation.
 
 ## Status
 
-The project includes the main API functionality, authentication, authorization, validation, database migrations, and API documentation required for the current version of the system.
+The project includes the main API functionality, authentication, authorization, validation, database migrations, API documentation, authorization documentation, and Postman testing evidence required for the current version of the system.
