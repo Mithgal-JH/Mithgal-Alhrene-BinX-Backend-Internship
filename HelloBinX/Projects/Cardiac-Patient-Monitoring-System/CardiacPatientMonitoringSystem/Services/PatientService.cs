@@ -37,27 +37,41 @@ public class PatientService : IPatientService
             .ToListAsync();
     }
 
-    public async Task<PatientResponseDto?> GetByIdAsync(int id)
+    // Get patient by ID with ownership check for Patient role
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)> GetByIdAsync(
+        int id,
+        string userId,
+        bool isPatient)
     {
-        return await _context.Patients
+        var patient = await _context.Patients
             .AsNoTracking()
-            .Where(p => p.PatientId == id)
-            .Select(p => new PatientResponseDto
-            {
-                PatientId = p.PatientId,
-                MedicalRecordNumber = p.MedicalRecordNumber,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                DateOfBirth = p.DateOfBirth,
-                Gender = p.Gender,
-                Phone = p.Phone,
-                Email = p.Email,
-                Address = p.Address,
-                EmergencyContactName = p.EmergencyContactName,
-                EmergencyContactPhone = p.EmergencyContactPhone,
-                MedicalNotes = p.MedicalNotes
-            })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(p => p.PatientId == id);
+
+        // Patient does not exist
+        if (patient is null)
+            return (null, false);
+
+        // Patient is trying to access another patient's data
+        if (isPatient && patient.UserId != userId)
+            return (null, true);
+
+        var result = new PatientResponseDto
+        {
+            PatientId = patient.PatientId,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Phone = patient.Phone,
+            Email = patient.Email,
+            Address = patient.Address,
+            EmergencyContactName = patient.EmergencyContactName,
+            EmergencyContactPhone = patient.EmergencyContactPhone,
+            MedicalNotes = patient.MedicalNotes
+        };
+
+        return (result, false);
     }
 
     public async Task<PatientResponseDto> CreateAsync(CreatePatientDto dto)
@@ -78,6 +92,7 @@ public class PatientService : IPatientService
         };
 
         _context.Patients.Add(patient);
+
         await _context.SaveChangesAsync();
 
         return new PatientResponseDto
@@ -103,7 +118,6 @@ public class PatientService : IPatientService
         UpdatePatientDto dto,
         string userId)
     {
-        // Find the patient
         var patient = await _context.Patients
             .FirstOrDefaultAsync(p => p.PatientId == id);
 
@@ -131,8 +145,15 @@ public class PatientService : IPatientService
         // Save changes
         await _context.SaveChangesAsync();
 
-        return (await GetByIdAsync(id), false);
+        // Return the updated patient
+        var updatedPatient = await GetByIdAsync(
+            id,
+            userId,
+            true);
+
+        return (updatedPatient.Patient, false);
     }
+
     public async Task<bool> DeleteAsync(int id)
     {
         var patient = await _context.Patients
@@ -142,6 +163,7 @@ public class PatientService : IPatientService
             return false;
 
         _context.Patients.Remove(patient);
+
         await _context.SaveChangesAsync();
 
         return true;

@@ -18,6 +18,7 @@ public class PatientsController : ControllerBase
         _patientService = patientService;
     }
 
+    [Authorize(Roles = "Admin,Doctor")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PatientResponseDto>>> GetAll()
     {
@@ -26,16 +27,34 @@ public class PatientsController : ControllerBase
         return Ok(patients);
     }
 
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<PatientResponseDto>> GetById(int id)
     {
-        var patient = await _patientService.GetByIdAsync(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (patient is null)
+        if (userId is null)
+            return Unauthorized();
+
+        var isPatient = User.IsInRole("Patient");
+
+        var result = await _patientService.GetByIdAsync(
+            id,
+            userId,
+            isPatient);
+
+        if (result.NotOwner)
+            return Forbid();
+
+        if (result.Patient is null)
             return NotFound();
 
-        return Ok(patient);
+        return Ok(result.Patient);
     }
+
+
+
+
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
