@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CardiacPatientMonitoringSystem.Controllers;
 
-
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -17,8 +16,9 @@ public class MedicationsController : ControllerBase
     {
         _medicationService = medicationService;
     }
-
     
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MedicationResponseDto>>> GetAll()
     {
@@ -27,6 +27,8 @@ public class MedicationsController : ControllerBase
         return Ok(medications);
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MedicationResponseDto>> GetById(int id)
     {
@@ -37,8 +39,6 @@ public class MedicationsController : ControllerBase
 
         return Ok(medication);
     }
-
-
 
     [Authorize(Roles = "Admin,Doctor")]
     [HttpPost]

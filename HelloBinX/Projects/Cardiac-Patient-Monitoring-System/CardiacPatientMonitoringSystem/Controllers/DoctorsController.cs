@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using CardiacPatientMonitoringSystem.DTOs.Doctors;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +17,8 @@ public class DoctorsController : ControllerBase
         _doctorService = doctorService;
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DoctorResponseDto>>> GetAll()
     {
@@ -25,7 +26,8 @@ public class DoctorsController : ControllerBase
 
         return Ok(doctors);
     }
-
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<DoctorResponseDto>> GetById(int id)
     {
@@ -56,39 +58,20 @@ public class DoctorsController : ControllerBase
             result.Doctor);
     }
 
-
-    // Allows a doctor to update only their own doctor profile
-    [Authorize(Roles = "Doctor")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<DoctorResponseDto>> Update(
         int id,
         UpdateDoctorDto dto)
     {
-        // Get the authenticated user's ID from the JWT "sub" claim
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var result = await _doctorService.UpdateAsync(id, dto);
 
-        // Make sure the JWT contains a user ID
-        if (userId is null)
-            return Unauthorized();
-
-        // Update the doctor and verify ownership inside the service
-        var result = await _doctorService.UpdateAsync(
-            id,
-            dto,
-            userId);
-
-        // The doctor exists, but belongs to another user
-        if (result.NotOwner)
-            return Forbid();
-
-        // Another doctor already uses this license number
         if (result.LicenseExists)
             return Conflict(new
             {
                 message = "A doctor with this license number already exists."
             });
 
-        // The requested doctor does not exist
         if (result.Doctor is null)
             return NotFound();
 

@@ -87,35 +87,24 @@ public class DoctorService : IDoctorService
         );
     }
 
-    // Updates a doctor only if the authenticated user owns that doctor
-    public async Task<(DoctorResponseDto? Doctor, bool LicenseExists, bool NotOwner)> UpdateAsync(
-        int id,
-        UpdateDoctorDto dto,
-        string userId)
+    public async Task<(DoctorResponseDto? Doctor, bool LicenseExists)> UpdateAsync(
+    int id,
+    UpdateDoctorDto dto)
     {
-        // Find the doctor by the requested DoctorId
         var doctor = await _context.Doctors
             .FirstOrDefaultAsync(d => d.DoctorId == id);
 
-        // If the doctor does not exist, return not found.
         if (doctor is null)
-            return (null, false, false);
+            return (null, false);
 
-        // Check whether the authenticated user owns this doctor.
-        if (doctor.UserId != userId)
-            return (null, false, true);
-
-        // Check whether another doctor already uses this license number.
         var licenseExists = await _context.Doctors
             .AnyAsync(d =>
                 d.LicenseNumber == dto.LicenseNumber &&
                 d.DoctorId != id);
 
-        // If another doctor already has this license number, reject the update.
         if (licenseExists)
-            return (null, true, false);
+            return (null, true);
 
-        // Update the doctor's information.
         doctor.FirstName = dto.FirstName;
         doctor.LastName = dto.LastName;
         doctor.Email = dto.Email;
@@ -123,13 +112,10 @@ public class DoctorService : IDoctorService
         doctor.Specialization = dto.Specialization;
         doctor.LicenseNumber = dto.LicenseNumber;
 
-        // Save the changes to the database
         await _context.SaveChangesAsync();
 
-        // Return the updated doctor
-        return (await GetByIdAsync(id), false, false);
+        return (await GetByIdAsync(id), false);
     }
-
     public async Task<bool> DeleteAsync(int id)
     {
         var doctor = await _context.Doctors

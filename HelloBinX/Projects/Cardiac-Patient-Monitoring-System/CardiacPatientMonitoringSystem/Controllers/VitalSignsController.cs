@@ -18,6 +18,8 @@ public class VitalSignsController : ControllerBase
         _vitalSignService = vitalSignService;
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VitalSignResponseDto>>> GetAll()
     {
@@ -34,6 +36,8 @@ public class VitalSignsController : ControllerBase
         return Ok(vitalSigns);
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<VitalSignResponseDto>> GetById(int id)
     {
@@ -57,6 +61,7 @@ public class VitalSignsController : ControllerBase
         return Ok(result.VitalSign);
     }
 
+    // Accessible by all authenticated roles
     [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpPost]
     public async Task<ActionResult<VitalSignResponseDto>> Create(
@@ -105,8 +110,7 @@ public class VitalSignsController : ControllerBase
             id,
             dto,
             userId,
-            User.IsInRole("Admin"),
-            User.IsInRole("Doctor"));
+            User.IsInRole("Admin"));
 
         if (result.NotOwner)
             return Forbid();

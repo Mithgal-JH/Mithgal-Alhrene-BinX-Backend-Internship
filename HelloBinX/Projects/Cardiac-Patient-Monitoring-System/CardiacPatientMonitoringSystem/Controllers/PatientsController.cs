@@ -22,26 +22,36 @@ public class PatientsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PatientResponseDto>>> GetAll()
     {
-        var patients = await _patientService.GetAllAsync();
-
-        return Ok(patients);
-    }
-
-    [Authorize(Roles = "Admin,Doctor,Patient")]
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<PatientResponseDto>> GetById(int id)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
 
         if (userId is null)
             return Unauthorized();
 
-        var isPatient = User.IsInRole("Patient");
+        var patients = await _patientService.GetAllAsync(
+            userId,
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
+
+        return Ok(patients);
+    }
+
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<PatientResponseDto>> GetById(int id)
+    {
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+            return Unauthorized();
 
         var result = await _patientService.GetByIdAsync(
             id,
             userId,
-            isPatient);
+            User.IsInRole("Admin"),
+            User.IsInRole("Doctor"));
 
         if (result.NotOwner)
             return Forbid();
@@ -51,10 +61,6 @@ public class PatientsController : ControllerBase
 
         return Ok(result.Patient);
     }
-
-
-
-
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
@@ -69,29 +75,27 @@ public class PatientsController : ControllerBase
             patient);
     }
 
-    [Authorize(Roles = "Patient")]
+    [Authorize(Roles = "Doctor,Patient")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<PatientResponseDto>> Update(
-    int id,
-    UpdatePatientDto dto)
+        int id,
+        UpdatePatientDto dto)
     {
-        // Get the authenticated user's ID from the JWT
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
 
         if (userId is null)
             return Unauthorized();
 
-        // Update patient and check ownership
         var result = await _patientService.UpdateAsync(
             id,
             dto,
-            userId);
+            userId,
+            User.IsInRole("Doctor"));
 
-        // Patient belongs to another user
         if (result.NotOwner)
             return Forbid();
 
-        // Patient does not exist
         if (result.Patient is null)
             return NotFound();
 

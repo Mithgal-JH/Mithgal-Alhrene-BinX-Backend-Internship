@@ -58,7 +58,7 @@ public class PatientMedicationsController : ControllerBase
         return Ok(result.PatientMedication);
     }
 
-    [Authorize(Roles = "Admin,Doctor,Patient")]
+    [Authorize(Roles = "Admin,Doctor")]
     [HttpPost]
     public async Task<ActionResult<PatientMedicationResponseDto>> Create(
         CreatePatientMedicationDto dto)

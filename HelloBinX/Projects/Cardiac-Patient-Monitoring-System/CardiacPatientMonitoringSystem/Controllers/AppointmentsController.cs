@@ -18,6 +18,8 @@ public class AppointmentsController : ControllerBase
         _appointmentService = appointmentService;
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppointmentResponseDto>>> GetAll()
     {
@@ -34,6 +36,8 @@ public class AppointmentsController : ControllerBase
         return Ok(appointments);
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AppointmentResponseDto>> GetById(int id)
     {
@@ -57,6 +61,8 @@ public class AppointmentsController : ControllerBase
         return Ok(result.Appointment);
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpPost]
     public async Task<ActionResult<AppointmentResponseDto>> Create(
         CreateAppointmentDto dto)
@@ -89,6 +95,8 @@ public class AppointmentsController : ControllerBase
             result.Appointment);
     }
 
+    // Accessible by all authenticated roles
+    [Authorize(Roles = "Admin,Doctor,Patient")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<AppointmentResponseDto>> Update(
         int id,

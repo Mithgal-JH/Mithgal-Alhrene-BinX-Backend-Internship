@@ -25,8 +25,7 @@ public interface IVitalSignService
         int id,
         UpdateVitalSignDto dto,
         string userId,
-        bool isAdmin,
-        bool isDoctor);
+        bool isAdmin);
 
     Task<bool> DeleteAsync(int id);
 }

@@ -15,10 +15,23 @@ public class PatientService : IPatientService
         _context = context;
     }
 
-    public async Task<IEnumerable<PatientResponseDto>> GetAllAsync()
+    public async Task<IEnumerable<PatientResponseDto>> GetAllAsync(
+        string userId,
+        bool isAdmin,
+        bool isDoctor)
     {
-        return await _context.Patients
+        var query = _context.Patients
             .AsNoTracking()
+            .AsQueryable();
+
+        if (!isAdmin && isDoctor)
+        {
+            query = query.Where(p =>
+                p.Appointments.Any(a =>
+                    a.Doctor.UserId == userId));
+        }
+
+        return await query
             .Select(p => new PatientResponseDto
             {
                 PatientId = p.PatientId,
@@ -37,44 +50,35 @@ public class PatientService : IPatientService
             .ToListAsync();
     }
 
-    // Get patient by ID with ownership check for Patient role
-    public async Task<(PatientResponseDto? Patient, bool NotOwner)> GetByIdAsync(
-        int id,
-        string userId,
-        bool isPatient)
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)>
+        GetByIdAsync(
+            int id,
+            string userId,
+            bool isAdmin,
+            bool isDoctor)
     {
         var patient = await _context.Patients
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.PatientId == id);
 
-        // Patient does not exist
         if (patient is null)
             return (null, false);
 
-        // Patient is trying to access another patient's data
-        if (isPatient && patient.UserId != userId)
-            return (null, true);
-
-        var result = new PatientResponseDto
+        if (!isAdmin)
         {
-            PatientId = patient.PatientId,
-            MedicalRecordNumber = patient.MedicalRecordNumber,
-            FirstName = patient.FirstName,
-            LastName = patient.LastName,
-            DateOfBirth = patient.DateOfBirth,
-            Gender = patient.Gender,
-            Phone = patient.Phone,
-            Email = patient.Email,
-            Address = patient.Address,
-            EmergencyContactName = patient.EmergencyContactName,
-            EmergencyContactPhone = patient.EmergencyContactPhone,
-            MedicalNotes = patient.MedicalNotes
-        };
+            var hasAccess = isDoctor
+                ? await HasDoctorAccessAsync(id, userId)
+                : patient.UserId == userId;
 
-        return (result, false);
+            if (!hasAccess)
+                return (null, true);
+        }
+
+        return (BuildResponse(patient), false);
     }
 
-    public async Task<PatientResponseDto> CreateAsync(CreatePatientDto dto)
+    public async Task<PatientResponseDto> CreateAsync(
+        CreatePatientDto dto)
     {
         var patient = new Patient
         {
@@ -95,41 +99,29 @@ public class PatientService : IPatientService
 
         await _context.SaveChangesAsync();
 
-        return new PatientResponseDto
-        {
-            PatientId = patient.PatientId,
-            MedicalRecordNumber = patient.MedicalRecordNumber,
-            FirstName = patient.FirstName,
-            LastName = patient.LastName,
-            DateOfBirth = patient.DateOfBirth,
-            Gender = patient.Gender,
-            Phone = patient.Phone,
-            Email = patient.Email,
-            Address = patient.Address,
-            EmergencyContactName = patient.EmergencyContactName,
-            EmergencyContactPhone = patient.EmergencyContactPhone,
-            MedicalNotes = patient.MedicalNotes
-        };
+        return BuildResponse(patient);
     }
 
-    // Update patient data only for the authenticated owner
-    public async Task<(PatientResponseDto? Patient, bool NotOwner)> UpdateAsync(
-        int id,
-        UpdatePatientDto dto,
-        string userId)
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)>
+        UpdateAsync(
+            int id,
+            UpdatePatientDto dto,
+            string userId,
+            bool isDoctor)
     {
         var patient = await _context.Patients
             .FirstOrDefaultAsync(p => p.PatientId == id);
 
-        // Patient does not exist
         if (patient is null)
             return (null, false);
 
-        // Check patient ownership
-        if (patient.UserId != userId)
+        var hasAccess = isDoctor
+            ? await HasDoctorAccessAsync(id, userId)
+            : patient.UserId == userId;
+
+        if (!hasAccess)
             return (null, true);
 
-        // Update patient data
         patient.MedicalRecordNumber = dto.MedicalRecordNumber;
         patient.FirstName = dto.FirstName;
         patient.LastName = dto.LastName;
@@ -142,16 +134,9 @@ public class PatientService : IPatientService
         patient.EmergencyContactPhone = dto.EmergencyContactPhone;
         patient.MedicalNotes = dto.MedicalNotes;
 
-        // Save changes
         await _context.SaveChangesAsync();
 
-        // Return the updated patient
-        var updatedPatient = await GetByIdAsync(
-            id,
-            userId,
-            true);
-
-        return (updatedPatient.Patient, false);
+        return (BuildResponse(patient), false);
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -167,5 +152,35 @@ public class PatientService : IPatientService
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    private async Task<bool> HasDoctorAccessAsync(
+        int patientId,
+        string userId)
+    {
+        return await _context.Appointments
+            .AnyAsync(a =>
+                a.PatientId == patientId &&
+                a.Doctor.UserId == userId);
+    }
+
+    private static PatientResponseDto BuildResponse(
+        Patient patient)
+    {
+        return new PatientResponseDto
+        {
+            PatientId = patient.PatientId,
+            MedicalRecordNumber = patient.MedicalRecordNumber,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            Phone = patient.Phone,
+            Email = patient.Email,
+            Address = patient.Address,
+            EmergencyContactName = patient.EmergencyContactName,
+            EmergencyContactPhone = patient.EmergencyContactPhone,
+            MedicalNotes = patient.MedicalNotes
+        };
     }
 }

@@ -138,8 +138,7 @@ public class VitalSignService : IVitalSignService
             int id,
             UpdateVitalSignDto dto,
             string userId,
-            bool isAdmin,
-            bool isDoctor)
+            bool isAdmin)
     {
         var vitalSign = await _context.VitalSigns
             .Include(v => v.Patient)
@@ -150,11 +149,9 @@ public class VitalSignService : IVitalSignService
 
         if (!isAdmin)
         {
-            var hasAccess = isDoctor
-                ? await HasDoctorAccessAsync(
+            var hasAccess =await HasDoctorAccessAsync(
                     vitalSign.PatientId,
-                    userId)
-                : false;
+                    userId);
 
             if (!hasAccess)
                 return (null, true);

@@ -4,20 +4,25 @@ namespace CardiacPatientMonitoringSystem.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientResponseDto>> GetAllAsync();
+    Task<IEnumerable<PatientResponseDto>> GetAllAsync(
+        string userId,
+        bool isAdmin,
+        bool isDoctor);
 
     Task<(PatientResponseDto? Patient, bool NotOwner)> GetByIdAsync(
         int id,
         string userId,
-        bool isPatient);
+        bool isAdmin,
+        bool isDoctor);
 
-    Task<PatientResponseDto> CreateAsync(CreatePatientDto dto);
+    Task<PatientResponseDto> CreateAsync(
+        CreatePatientDto dto);
 
-    // Update patient data only for the authenticated owner
     Task<(PatientResponseDto? Patient, bool NotOwner)> UpdateAsync(
         int id,
         UpdatePatientDto dto,
-        string userId);
+        string userId,
+        bool isDoctor);
 
     Task<bool> DeleteAsync(int id);
 }

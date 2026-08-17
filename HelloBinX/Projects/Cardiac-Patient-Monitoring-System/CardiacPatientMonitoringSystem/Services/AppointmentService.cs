@@ -134,12 +134,13 @@ public class AppointmentService : IAppointmentService
         return (await BuildResponseAsync(appointment.AppointmentId), false);
     }
 
-    public async Task<(AppointmentResponseDto? Appointment, bool NotOwner)> UpdateAsync(
-        int id,
-        UpdateAppointmentDto dto,
-        string userId,
-        bool isAdmin,
-        bool isDoctor)
+    public async Task<(AppointmentResponseDto? Appointment, bool NotOwner)>
+     UpdateAsync(
+         int id,
+         UpdateAppointmentDto dto,
+         string userId,
+         bool isAdmin,
+         bool isDoctor)
     {
         var appointment = await _context.Appointments
             .Include(a => a.Doctor)
@@ -149,6 +150,8 @@ public class AppointmentService : IAppointmentService
         if (appointment is null)
             return (null, false);
 
+        // Admin can update any appointment
+        // Doctor/Patient can update only their own appointment
         if (!isAdmin)
         {
             var isOwner = isDoctor
@@ -157,8 +160,13 @@ public class AppointmentService : IAppointmentService
 
             if (!isOwner)
                 return (null, true);
+
+            // Doctor and Patient cannot change the assigned doctor
+            if (dto.DoctorId != appointment.DoctorId)
+                return (null, true);
         }
 
+        // The doctor must exist
         var doctorExists = await _context.Doctors
             .AnyAsync(d => d.DoctorId == dto.DoctorId);
 
@@ -174,9 +182,10 @@ public class AppointmentService : IAppointmentService
 
         await _context.SaveChangesAsync();
 
-        return (await BuildResponseAsync(id), false);
+        return (
+            await BuildResponseAsync(id),
+            false);
     }
-
     public async Task<bool> DeleteAsync(int id)
     {
         var appointment = await _context.Appointments

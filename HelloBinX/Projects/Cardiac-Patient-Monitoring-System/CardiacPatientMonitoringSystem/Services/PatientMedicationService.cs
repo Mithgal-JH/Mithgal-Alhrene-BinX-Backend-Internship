@@ -101,11 +101,9 @@ public class PatientMedicationService : IPatientMedicationService
 
         if (!isAdmin)
         {
-            var hasAccess = isDoctor
-                ? await HasDoctorAccessAsync(
-                    dto.PatientId,
-                    userId)
-                : patient.UserId == userId;
+            var hasAccess = await HasDoctorAccessAsync(
+                dto.PatientId,
+                userId);
 
             if (!hasAccess)
                 return (null, true);

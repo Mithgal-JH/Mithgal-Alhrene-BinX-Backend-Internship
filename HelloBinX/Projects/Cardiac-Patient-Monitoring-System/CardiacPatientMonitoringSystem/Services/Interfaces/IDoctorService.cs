@@ -11,11 +11,9 @@ public interface IDoctorService
     Task<(DoctorResponseDto? Doctor, bool LicenseExists)> CreateAsync(
         CreateDoctorDto dto);
 
-    // Updates a doctor and verifies that the authenticated user owns the doctor.
-    Task<(DoctorResponseDto? Doctor, bool LicenseExists, bool NotOwner)> UpdateAsync(
+    Task<(DoctorResponseDto? Doctor, bool LicenseExists)> UpdateAsync(
         int id,
-        UpdateDoctorDto dto,
-        string userId);
+        UpdateDoctorDto dto);
 
     Task<bool> DeleteAsync(int id);
 }
