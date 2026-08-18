@@ -7,7 +7,7 @@ Week 5 marks the transition from Phase 2 into Phase 3.
 The main focus of the week is **testing with xUnit and Moq, integration testing, centralized error handling, and beginning the applied project**.
 
 **Status:** 🟡 In Progress  
-**Current Day:** Day 2 — Completed  
+**Current Day:** Day 3 — Completed  
 **Week Status:** Not completed yet
 
 ## Week 5 Objectives
@@ -28,7 +28,7 @@ During this week, the main goals are to:
 |---|---|---|
 | Day 1 | Choosing the Phase 3 Project & Unit Testing with xUnit | ✅ Completed |
 | Day 2 | Mocking Dependencies with Moq | ✅ Completed |
-| Day 3 | Integration Testing with WebApplicationFactory | ⏳ Not Started |
+| Day 3 | Integration Testing with WebApplicationFactory | ✅ Completed |
 | Day 4 | Centralized Error Handling & Global Exception Middleware | ⏳ Not Started |
 | Day 5 | Applying Testing to the Project & Week 5 Synthesis | ⏳ Not Started |
 
@@ -201,8 +201,86 @@ Commit:
 Complete Week 5 Day 2 Moq repository testing
 ```
 
+---
+
+## Day 3 — Completed
+
+### Integration Testing with WebApplicationFactory
+
+Day 3 focused on integration testing the Cardiac Patient Monitoring System API using:
+
+- xUnit
+- Microsoft.AspNetCore.Mvc.Testing
+- WebApplicationFactory
+- Entity Framework Core In-Memory
+- JWT Authentication
+
+A custom test factory was created:
+
+```text
+CustomWebApplicationFactory
+```
+
+The factory configures a dedicated `Testing` environment and uses an **In-Memory database** instead of the development PostgreSQL database.
+
+Test data was seeded for a Patient user:
+
+```text
+Email: patient17@example.com
+Patient ID: 10
+```
+
+### Integration Test Scenarios
+
+Tests were written for:
+
+- Get patient by ID when the patient exists.
+- Get patient by ID when the patient does not exist.
+- Authentication using the real login endpoint.
+- Attaching a valid JWT as a Bearer token.
+- Verifying the protected patient endpoint.
+- Verifying response status codes and response body data.
+
+### Test Result
+
+```text
+Total:   2
+Passed:  2
+Failed:  0
+Skipped: 0
+```
+
+The tests were executed successfully using:
+
+```bash
+dotnet test
+```
+
+### Test Environment
+
+The integration tests use:
+
+```text
+Environment: Testing
+Database: Entity Framework Core In-Memory
+```
+
+This keeps the integration tests isolated from the development PostgreSQL database.
+
+### Evidence
+
+Day 3 evidence includes:
+
+- `PatientsApiIntegrationTests`.
+- `CustomWebApplicationFactory`.
+- Isolated In-Memory test database.
+- Test-specific JWT configuration.
+- Happy-path integration test.
+- Not-found integration test.
+- Successful test run showing 2/2 tests passed.
+
 ## Next
 
-Day 3 will continue with **integration testing using WebApplicationFactory**.
+Day 4 will continue with **centralized error handling and global exception middleware**.
 
 More sections will be added to this README as the remaining days of Week 5 are completed.
