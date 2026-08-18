@@ -22,8 +22,9 @@ public class UpdatePatientValidator : AbstractValidator<UpdatePatientDto>
             .MaximumLength(100);
 
         RuleFor(x => x.DateOfBirth)
-            .Must(date => CalculateAge(date) >= 18)
-            .WithMessage("Patient must be at least 18 years old");
+            .GreaterThanOrEqualTo(new DateOnly(1900, 1, 1))
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
+            .WithMessage("Date of birth must be between 1900 and today");
 
         RuleFor(x => x.Gender)
             .NotEmpty()

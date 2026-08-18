@@ -9,6 +9,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using CardiacPatientMonitoringSystem.Validators.Auth;
 using Microsoft.AspNetCore.RateLimiting;
+using CardiacPatientMonitoringSystem.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,18 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdultOnly", policy =>
+    {
+        policy.Requirements.Add(
+            new AdultOnlyRequirement());
+    });
+});
+
 
 
 // Register FluentValidation

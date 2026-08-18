@@ -36,8 +36,8 @@ public class PatientsController : ControllerBase
         return Ok(patients);
     }
 
-    // Accessible by all authenticated roles
-    [Authorize(Roles = "Admin,Doctor,Patient")]
+    // Accessible by all authenticated roles and adult only
+    [Authorize(Policy = "AdultOnly")]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<PatientResponseDto>> GetById(int id)
     {

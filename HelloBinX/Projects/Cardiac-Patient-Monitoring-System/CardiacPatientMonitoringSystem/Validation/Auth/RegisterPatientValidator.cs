@@ -38,8 +38,9 @@ public class RegisterPatientValidator : AbstractValidator<RegisterPatientDto>
             .MaximumLength(100);
 
         RuleFor(x => x.DateOfBirth)
-            .Must(date => CalculateAge(date) >= 18)
-            .WithMessage("Patient must be at least 18 years old");
+            .GreaterThanOrEqualTo(new DateOnly(1900, 1, 1))
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
+            .WithMessage("Date of birth must be between 1900 and today");
 
         RuleFor(x => x.Gender)
             .NotEmpty()
@@ -63,17 +64,5 @@ public class RegisterPatientValidator : AbstractValidator<RegisterPatientDto>
 
         RuleFor(x => x.MedicalNotes)
             .MaximumLength(1000);
-    }
-
-    private static int CalculateAge(DateOnly dateOfBirth)
-    {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-        var age = today.Year - dateOfBirth.Year;
-
-        if (dateOfBirth > today.AddYears(-age))
-            age--;
-
-        return age;
     }
 }

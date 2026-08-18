@@ -20,6 +20,7 @@ public class PatientService : IPatientService
         bool isAdmin,
         bool isDoctor)
     {
+        
         var query = _context.Patients
             .AsNoTracking()
             .AsQueryable();
