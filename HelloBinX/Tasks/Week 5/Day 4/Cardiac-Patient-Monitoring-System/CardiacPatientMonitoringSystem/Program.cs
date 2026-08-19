@@ -9,6 +9,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using CardiacPatientMonitoringSystem.Validators.Auth;
 using Microsoft.AspNetCore.RateLimiting;
+using CardiacPatientMonitoringSystem.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -125,6 +126,9 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+
+// Exceptions middleawre
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Seed roles and admin account
 using (var scope = app.Services.CreateScope())

@@ -29,7 +29,7 @@ During this week, the main goals are to:
 | Day 1 | Choosing the Phase 3 Project & Unit Testing with xUnit | ✅ Completed |
 | Day 2 | Mocking Dependencies with Moq | ✅ Completed |
 | Day 3 | Integration Testing with WebApplicationFactory | ✅ Completed |
-| Day 4 | Centralized Error Handling & Global Exception Middleware | ⏳ Not Started |
+| Day 4 | Centralized Error Handling & Global Exception Middleware | ✅ Completed |
 | Day 5 | Applying Testing to the Project & Week 5 Synthesis | ⏳ Not Started |
 
 ## Day 1 — Completed
@@ -279,8 +279,74 @@ Day 3 evidence includes:
 - Not-found integration test.
 - Successful test run showing 2/2 tests passed.
 
+## Day 4 — Completed
+
+### Centralized Error Handling & Global Exception Middleware
+
+Day 4 focused on centralized handling of unexpected exceptions using custom ASP.NET Core middleware.
+
+Implemented:
+
+- Custom `ExceptionHandlingMiddleware`.
+- Centralized handling of unhandled exceptions.
+- Standardized `ProblemDetails` responses.
+- Structured logging using `ILogger`.
+- Request path included as structured logging context.
+- Safe `500 Internal Server Error` responses without exposing exception messages or stack traces.
+- Middleware registered early in the ASP.NET Core request pipeline.
+
+### Middleware Registration
+
+```csharp
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+```
+
+### Structured Logging
+
+```csharp
+_logger.LogError(
+    ex,
+    "Unhandled exception occurred while processing {RequestPath}",
+    context.Request.Path);
+```
+
+### ProblemDetails Response
+
+```json
+{
+  "title": "An unexpected error occurred.",
+  "status": 500
+}
+```
+
+### Testing
+
+A temporary test endpoint was used to deliberately trigger an unhandled exception.
+
+The test verified that:
+
+- The client receives `500 Internal Server Error`.
+- The client receives a standardized `ProblemDetails` response.
+- The exception message and stack trace are not exposed to the client.
+- The server logs the full exception details.
+- The request path is included in the structured log.
+
+The test endpoint was commented out after verification.
+
+### Evidence
+
+Day 4 evidence includes:
+
+- `ExceptionHandlingMiddleware`.
+- Middleware registration in `Program.cs`.
+- Postman screenshot showing the `500 ProblemDetails` response.
+- Server log screenshot showing the exception details and request path.
+- Day 4 documentation.
+
+---
+
 ## Next
 
-Day 4 will continue with **centralized error handling and global exception middleware**.
+Day 5 will focus on **applying testing to the project and Week 5 synthesis**.
 
 More sections will be added to this README as the remaining days of Week 5 are completed.

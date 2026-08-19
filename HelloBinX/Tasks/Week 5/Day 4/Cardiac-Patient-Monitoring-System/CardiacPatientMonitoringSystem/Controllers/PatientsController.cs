@@ -109,4 +109,22 @@ public class PatientsController : ControllerBase
 
         return NoContent();
     }
+
+
+
+
+
+
+
+
+
+    //test endpoint for global exception handling middleware
+
+    // [HttpGet("test-error")]
+    // public IActionResult TestError()
+    // {
+    //     throw new Exception("This is a deliberate test exception.");
+    // }
+
+
 }
