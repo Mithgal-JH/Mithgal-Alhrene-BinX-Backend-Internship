@@ -6,9 +6,9 @@ Week 5 marks the transition from Phase 2 into Phase 3.
 
 The main focus of the week is **testing with xUnit and Moq, integration testing, centralized error handling, and beginning the applied project**.
 
-**Status:** 🟡 In Progress  
-**Current Day:** Day 3 — Completed  
-**Week Status:** Not completed yet
+**Status:** 🟢 Completed  
+**Current Day:** Day 5 — Completed  
+**Week Status:** Completed
 
 ## Week 5 Objectives
 
@@ -30,7 +30,7 @@ During this week, the main goals are to:
 | Day 2 | Mocking Dependencies with Moq | ✅ Completed |
 | Day 3 | Integration Testing with WebApplicationFactory | ✅ Completed |
 | Day 4 | Centralized Error Handling & Global Exception Middleware | ✅ Completed |
-| Day 5 | Applying Testing to the Project & Week 5 Synthesis | ⏳ Not Started |
+| Day 5 | Applying Testing to the Project & Week 5 Synthesis | ✅ Completed |
 
 ## Day 1 — Completed
 
@@ -345,8 +345,206 @@ Day 4 evidence includes:
 
 ---
 
-## Next
+## Day 5 — Completed
 
-Day 5 will focus on **applying testing to the project and Week 5 synthesis**.
+### Applying Testing to the Project & Week 5 Synthesis
 
-More sections will be added to this README as the remaining days of Week 5 are completed.
+Day 5 focused on applying the testing techniques learned throughout Week 5 to the Cardiac Patient Monitoring System and consolidating the tests into one complete test suite.
+
+The final test suite combines:
+
+- xUnit unit testing.
+- Arrange–Act–Assert structure.
+- Moq-based service testing.
+- EF Core In-Memory testing for service logic.
+- Integration testing with `WebApplicationFactory`.
+- JWT authentication during integration testing.
+- Centralized exception handling with `ProblemDetails`.
+- Structured logging with `ILogger`.
+
+### Final Test Project
+
+The final test project contains:
+
+```text
+CardiacPatientMonitoringSystem.Tests
+├── AppointmentServiceTests.cs
+├── CustomWebApplicationFactory.cs
+├── PatientsApiIntegrationTests.cs
+├── PatientServiceTests.cs
+└── VitalSignServiceTests.cs
+```
+
+### High-Risk Logic Covered
+
+Three important areas of business logic were selected for focused testing:
+
+#### 1. VitalSignService
+
+```text
+GetVitalSignStatus()
+```
+
+Covers normal, warning, and critical vital-sign status classification.
+
+#### 2. PatientService
+
+```text
+GetByIdAsync()
+```
+
+Covers patient existence, ownership validation, and repository failure behavior.
+
+#### 3. AppointmentService
+
+```text
+GetByIdAsync()
+```
+
+Covers appointment existence and doctor/patient ownership validation.
+
+### AppointmentService Tests
+
+Three tests were added for `AppointmentService.GetByIdAsync()`:
+
+- Doctor owns the appointment and the appointment is returned.
+- Appointment does not exist and `null` is returned.
+- User is not the owner and `NotOwner` is returned as `true`.
+
+The tests use an isolated Entity Framework Core In-Memory database.
+
+### Final Test Suite
+
+| Test Class | Tests |
+|---|---:|
+| `VitalSignServiceTests` | 6 |
+| `PatientServiceTests` | 4 |
+| `AppointmentServiceTests` | 3 |
+| `PatientsApiIntegrationTests` | 2 |
+| **Total** | **15** |
+
+### Full Test Run
+
+The complete test suite was executed using:
+
+```bash
+dotnet test
+```
+
+Final result:
+
+```text
+Total Tests: 15
+Passed:      15
+Failed:       0
+Skipped:      0
+```
+
+**15/15 tests passed successfully.**
+
+### Test Environment
+
+Integration tests continue to use:
+
+```text
+Environment: Testing
+Database: Entity Framework Core In-Memory
+Authentication: JWT
+```
+
+This keeps integration testing isolated from the development PostgreSQL database.
+
+### Centralized Error Handling
+
+The centralized error-handling implementation from Day 4 remains part of the final project:
+
+- `ExceptionHandlingMiddleware`.
+- Standardized `ProblemDetails` responses.
+- Structured logging with `ILogger`.
+- Safe `500 Internal Server Error` responses.
+- No exposure of exception messages or stack traces to API clients.
+
+### Build Warnings
+
+The final test run completed successfully, but the build reported:
+
+```text
+NU1903
+Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability
+```
+
+An HTTPS redirection warning was also displayed during the integration test:
+
+```text
+Failed to determine the https port for redirect.
+```
+
+These warnings did not cause any test failures.
+
+Final result remained:
+
+```text
+15 passed
+0 failed
+```
+
+### Evidence
+
+Day 5 evidence includes the final test run screenshot showing:
+
+- Test Explorer.
+- All four test classes.
+- `15/15` tests passed.
+- Successful test execution.
+
+Evidence file:
+
+```text
+Day 5/
+└── Evidence/
+    └── Day5-Full-Test-Suite.png
+```
+
+### Week 5 Synthesis
+
+Week 5 combined:
+
+```text
+xUnit
+   ↓
+Arrange–Act–Assert
+   ↓
+Moq
+   ↓
+Integration Testing
+   ↓
+WebApplicationFactory
+   ↓
+JWT Authentication
+   ↓
+Centralized Exception Handling
+   ↓
+ProblemDetails
+   ↓
+ILogger
+   ↓
+Full Test Suite
+```
+
+The Cardiac Patient Monitoring System now has a consolidated automated test suite that can be executed with:
+
+```bash
+dotnet test
+```
+
+### Final Week 5 Result
+
+```text
+Day 1  → Completed
+Day 2  → Completed
+Day 3  → Completed
+Day 4  → Completed
+Day 5  → Completed
+```
+
+**Week 5: ✅ Completed**
