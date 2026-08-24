@@ -12,6 +12,8 @@ This section contains my **weekly internship tasks**, practical exercises, and l
 | **2** | Advanced C# & ASP.NET Core Foundations       | ✅ Completed | [View Week 2](./Week%202/README.md) |
 | **3** | REST API, EF Core & CRUD                     | ✅ Completed | [View Week 3](./Week%203/README.md) |
 | **4** | Authentication, Authorization & API Security | ✅ Completed | [View Week 4](./Week%204/README.md) |
+| **5** | Testing, Error Handling & Project Begins  | ✅ Completed | [View Week 5](./Week%205/README.md) |
+| **6** | Phase 3 Sprint 1 — Applied Project Work    | 🟡 In Progress | [View Week 6](./Week%206/README.md) |
 
 ---
 
@@ -110,6 +112,85 @@ Week 4 focused on securing the ASP.NET Core Web API through authentication, auth
 
 ---
 
+### Week 5 — Testing, Error Handling & Project Begins
+
+Week 5 marked the transition from Phase 2 into Phase 3 and focused on testing, centralized error handling, and applying the learned concepts to the Cardiac Patient Monitoring System.
+
+**Main topics:**
+
+- xUnit unit testing
+- Arrange–Act–Assert pattern
+- Moq dependency mocking
+- Repository pattern for testable services
+- Integration testing with `WebApplicationFactory`
+- Entity Framework Core In-Memory testing
+- JWT authentication in integration tests
+- Centralized exception handling
+- `ProblemDetails`
+- Structured logging with `ILogger`
+- Full automated test suite
+
+**Main project:** Cardiac Patient Monitoring System
+
+**Final test result:** 15/15 tests passed
+
+📂 **Documentation:**  
+[View Week 5](./Week%205/README.md)
+
+---
+
+### Week 6 — Phase 3 Sprint 1 — Applied Project Work
+
+Week 6 is the first full applied-project sprint and focuses on turning the Cardiac Patient Monitoring System into a more structured, production-oriented backend.
+
+**Main topics:**
+
+- Sprint Planning
+- Database and ERD review
+- EF Core data modeling
+- Fluent API configuration
+- Entity relationships
+- Delete behavior
+- Unique indexes
+- Seed data
+- Code-First migrations
+- PostgreSQL database verification
+- Core catalog and read routes
+- Write operations and business logic
+- Mentor code review
+- Sprint Review and Retrospective
+
+### Current Progress
+
+**Day 1:** Sprint Planning & Project Database Design — ✅ Completed
+
+**Day 2:** EF Core Data Model & Migrations — ✅ Completed
+
+Day 2 included:
+
+- Fluent API configuration
+- Explicit `DeleteBehavior.Restrict`
+- Unique indexes
+- Medication seed data
+- `AddMedicationSeedData` migration
+- PostgreSQL database update
+- Migration history verification
+- Automated testing
+
+**Day 2 Test Result:**
+
+```text
+Total:   15
+Passed:  15
+Failed:  0
+Skipped: 0
+```
+
+📂 **Documentation:**  
+[View Week 6](./Week%206/README.md)
+
+---
+
 ## 📁 Tasks Structure
 
 ```text
@@ -141,7 +222,23 @@ Tasks/
 │   ├── Day 4/
 │   └── Day 5/
 │
-└── Week 4/
+├── Week 4/
+│   ├── README.md
+│   ├── Day 1/
+│   ├── Day 2/
+│   ├── Day 3/
+│   ├── Day 4/
+│   └── Day 5/
+│
+├── Week 5/
+│   ├── README.md
+│   ├── Day 1/
+│   ├── Day 2/
+│   ├── Day 3/
+│   ├── Day 4/
+│   └── Day 5/
+│
+└── Week 6/
     ├── README.md
     ├── Day 1/
     ├── Day 2/
@@ -154,6 +251,6 @@ Tasks/
 
 ## 🚀 Internship Progress
 
-**Weeks Completed:** 4 / 10  
-**Current:** Week 4 — Completed  
+**Weeks Completed:** 5 / 10  
+**Current:** Week 6 — Day 2 Completed  
 **Track:** Backend Development (.NET)
