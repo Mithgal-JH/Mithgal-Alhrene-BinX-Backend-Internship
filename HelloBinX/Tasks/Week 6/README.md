@@ -1,230 +1,255 @@
-# Week 6 — Day 2
-## EF Core Data Model, Fluent API & Database Seeding
+# Week 6 — Core API Development & Applied Backend Work
 
-### Overview
+## Week Overview
 
-Day 2 focused on reviewing and strengthening the Entity Framework Core data model for the Cardiac Patient Monitoring System.
+Week 6 focuses on strengthening the Cardiac Patient Monitoring System through applied backend development and progressively more production-oriented API design.
 
-The main work included configuring entity relationships using Fluent API, defining delete behaviors and indexes, adding domain seed data, creating and reviewing an EF Core migration, applying the migration to PostgreSQL, and verifying the resulting database state.
+**Status:** 🟢 In Progress  
+**Current Day:** Day 3 — Completed  
+**Week Status:** In Progress
+
+## Week 6 Objectives
+
+During this week, the main goals are to:
+
+- Strengthen the Cardiac Patient Monitoring System.
+- Continue applying Entity Framework Core patterns.
+- Implement production-style read operations.
+- Build efficient paginated API endpoints.
+- Support filtering and sorting through query parameters.
+- Project entities to DTOs.
+- Validate the implemented endpoints through Postman and automated checks.
+
+## Daily Progress
+
+| Day | Topic | Status |
+|---|---|---|
+| Day 1 | Sprint Planning & Project Organization | ✅ Completed |
+| Day 2 | EF Core Data Model, Fluent API & Database Seeding | ✅ Completed |
+| Day 3 | Implementing Core Routes I: Catalog & Read Operations | ✅ Completed |
 
 ---
 
-## Objectives
+## Day 3 — Completed
 
-- Review the existing EF Core entities.
-- Configure entity relationships using Fluent API.
-- Define explicit `DeleteBehavior` rules.
-- Configure required fields, maximum lengths, precision, and indexes.
-- Add reference/domain seed data using `HasData`.
-- Create an EF Core migration for the seed data.
-- Review the generated migration before applying it.
-- Apply the migration to PostgreSQL.
-- Verify the seeded records and migration history.
-- Run the existing automated test suite.
+### Implementing Core Routes I: Catalog & Read Operations
 
----
+Day 3 focused on implementing efficient and scalable read operations for the Patients resource in the Cardiac Patient Monitoring System.
 
-## 1. EF Core Data Model
+The main work included:
 
-The system uses the following main entities:
+- Pagination using `page` and `pageSize`.
+- Conditional filtering using `search` and `gender`.
+- Sorting using the `sort` query parameter.
+- DTO projection using `PatientResponseDto`.
+- Efficient read-only queries with `AsNoTracking()`.
+- Returning `totalCount` after filtering.
+- Testing all scenarios through Postman.
 
-- `Patient`
-- `Doctor`
-- `VitalSign`
-- `Medication`
-- `PatientMedication`
-- `Appointment`
+### Patients List Endpoint
 
-The main relationships are:
+The main endpoint was updated:
 
 ```text
-Patient
- ├── VitalSigns
- ├── Appointments ─── Doctor
- └── PatientMedications ─── Medication
+GET /api/Patients
 ```
 
----
-
-## 2. Fluent API Configuration
-
-Entity configurations are defined in:
+Supported query parameters:
 
 ```text
-Data/ApplicationDbContext.cs
+page
+pageSize
+search
+gender
+sort
 ```
 
-The `ApplicationDbContext` configures:
+Example:
 
-- Primary keys
-- Required properties
-- Maximum string lengths
-- Decimal precision
-- Unique indexes
-- Foreign key relationships
-- Delete behaviors
+```text
+GET /api/Patients?page=1&pageSize=2&search=Ahmad&gender=Male&sort=dob_desc
+```
 
-### Delete Behavior
+### Pagination
 
-The application uses:
+Pagination was implemented using:
 
 ```csharp
-DeleteBehavior.Restrict
+.Skip((page - 1) * pageSize)
+.Take(pageSize)
 ```
 
-for the main domain relationships.
-
-This prevents accidental cascading deletion of important patient-related medical data.
-
----
-
-## 3. Indexes
-
-Unique indexes were configured for important identifiers:
+Example:
 
 ```text
-Patients.MedicalRecordNumber
-Patients.UserId
-Doctors.LicenseNumber
-Doctors.UserId
+GET /api/Patients?page=1&pageSize=2
 ```
 
-These indexes help enforce data uniqueness and support efficient lookups.
+The response includes:
 
----
+```json
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 2,
+  "totalCount": 8
+}
+```
 
-## 4. Medication Seed Data
+### Filtering
 
-Reference data was added using EF Core `HasData`.
+Two optional filters were implemented.
 
-The seeded medications are:
+#### Search
 
-| ID | Name | Generic Name | Strength |
-|---:|---|---|---|
-| 101 | Aspirin | Acetylsalicylic Acid | 81 mg |
-| 102 | Atorvastatin | Atorvastatin | 20 mg |
-
-An existing `Metoprolol` record with `MedicationId = 2` was already present in the database, so it was not inserted again.
-
----
-
-## 5. EF Core Migration
-
-A new migration was created:
+Searches both `FirstName` and `LastName`:
 
 ```text
-20260824164822_AddMedicationSeedData
+GET /api/Patients?search=Ahmad
 ```
 
-Command used:
+#### Gender
 
-```powershell
-dotnet ef migrations add AddMedicationSeedData
-```
-
-The generated migration inserts the two new medication records and removes them in its `Down()` method.
-
-The migration was reviewed before applying it.
-
----
-
-## 6. Database Update
-
-The migration was successfully applied using:
-
-```powershell
-dotnet ef database update
-```
-
-The migration was recorded in:
+Filters patients by gender:
 
 ```text
-__EFMigrationsHistory
+GET /api/Patients?gender=Male
 ```
 
-The current migration history includes:
+### Sorting
+
+Sorting is controlled through the `sort` parameter.
+
+Ascending:
 
 ```text
-20260810131740_InitialCreate
-20260810212953_AddIdentity
-20260813120654_AddUserIdToPatientAndDoctor
-20260824164822_AddMedicationSeedData
+GET /api/Patients?sort=dob_asc
 ```
 
----
-
-## 7. PostgreSQL Verification
-
-The `Medications` table was verified through pgAdmin.
-
-The final data includes:
+Descending:
 
 ```text
-2    Metoprolol
-101  Aspirin
-102  Atorvastatin
+GET /api/Patients?sort=dob_desc
 ```
 
-This confirmed that the new seed data was successfully inserted without affecting the existing medication record.
+Implementation:
 
----
-
-## 8. Testing
-
-The complete automated test suite was executed using:
-
-```powershell
-dotnet test
+```csharp
+if (sort == "dob_desc")
+    query = query.OrderByDescending(p => p.DateOfBirth);
+else
+    query = query.OrderBy(p => p.DateOfBirth);
 ```
 
-### Test Results
+### DTO Projection
+
+The endpoint does not return EF Core `Patient` entities directly.
+
+The query projects the selected fields into:
 
 ```text
-Total:   15
-Passed:  15
-Failed:  0
-Skipped: 0
+PatientResponseDto
 ```
 
-All tests passed successfully.
+using LINQ `Select()`.
 
----
+The final response type is:
 
-## 9. Commands Used
+```text
+PaginatedResponseDto<PatientResponseDto>
+```
+
+### Query Flow
+
+```text
+AsNoTracking()
+      ↓
+Filters
+      ↓
+CountAsync()
+      ↓
+Sorting
+      ↓
+Skip()
+      ↓
+Take()
+      ↓
+Select() → PatientResponseDto
+      ↓
+ToListAsync()
+```
+
+### Postman Testing
+
+The endpoint was tested successfully with:
+
+- Pagination.
+- Search filtering.
+- Gender filtering.
+- Ascending sorting.
+- Descending sorting.
+- Combined pagination, filtering, and sorting.
+
+All tested scenarios returned:
+
+```text
+200 OK
+```
+
+### Build & Test
+
+The project was verified using:
 
 ```powershell
 dotnet build
-
-dotnet ef migrations add AddMedicationSeedData
-
-dotnet ef migrations list
-
-dotnet ef migrations remove
-
-dotnet ef database update
-
 dotnet test
-
-git status
+dotnet run
 ```
 
----
+Build result:
 
-## 10. Outcome
+```text
+Build succeeded
+```
 
-Day 2 successfully strengthened the EF Core database layer by:
+The test command completed successfully with no test failures reported.
 
-- Configuring the domain model with Fluent API.
-- Defining explicit relationships and delete behaviors.
-- Maintaining unique database constraints.
-- Adding reference seed data.
-- Creating and reviewing an EF Core migration.
-- Applying the migration successfully to PostgreSQL.
-- Verifying the database state through pgAdmin.
-- Confirming that all automated tests pass.
+The application started successfully on:
 
-### Final Status
+```text
+http://localhost:5180
+```
 
-**Day 2 — Completed ✅**
+### Build Warning
 
-**Tests: 15/15 Passed**
+The build reported:
+
+```text
+NU1903
+Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability
+```
+
+This warning did not cause the build or test command to fail.
+
+### Evidence
+
+Day 3 evidence includes:
+
+- Pagination test screenshot.
+- Search filter test screenshot.
+- Gender + sorting test screenshot.
+- Combined query test screenshot.
+- Successful build and test execution.
+
+### Day 3 Outcome
+
+Day 3 successfully implemented the core read operations for the Patients resource with:
+
+- Pagination.
+- Filtering.
+- Sorting.
+- DTO projection.
+- Efficient EF Core querying.
+- Postman verification.
+
+**Day 3 — Completed ✅**
