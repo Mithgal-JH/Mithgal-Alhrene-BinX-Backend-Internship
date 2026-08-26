@@ -5,7 +5,7 @@
 Week 6 focuses on strengthening the Cardiac Patient Monitoring System through applied backend development and production-oriented API design.
 
 **Status:** 🟢 In Progress  
-**Current Day:** Day 3 — Completed  
+**Current Day:** Day 4 — Completed  
 **Week Status:** In Progress
 
 ## Week Objectives
@@ -28,7 +28,7 @@ During this week, the main goals are to:
 | Day 1 | Sprint Planning & Project Organization | ✅ Completed |
 | Day 2 | EF Core Data Model, Fluent API & Database Seeding | ✅ Completed |
 | Day 3 | Core Routes I: Catalog & Read Operations | ✅ Completed |
-| Day 4 | — | ⏳ Pending |
+| Day 4 | Database Transactions & Rollback Testing | ✅ Completed |
 | Day 5 | — | ⏳ Pending |
 
 ---
@@ -122,6 +122,104 @@ Day 3 evidence includes:
 - Gender + sorting screenshot.
 - Combined query screenshot.
 
+
+---
+
+## Day 4 — Completed
+
+### Database Transactions & Rollback Testing
+
+Day 4 focused on implementing and testing a real multi-step write operation using a database transaction.
+
+The selected operation was creating an Appointment together with Notifications for both the Patient and the Doctor.
+
+Implemented:
+
+- Added the `Notifications` entity and database table.
+- Linked Notifications to Appointments.
+- Updated Doctor creation so Admin-created Doctors are linked to an Identity User.
+- Assigned the `Doctor` role to the created Identity User.
+- Wrapped Doctor User + Doctor creation inside a transaction.
+- Updated Appointment creation to use a database transaction.
+- Created a Notification for the Patient.
+- Created a Notification for the Doctor.
+- Used `CommitAsync()` for successful operations.
+- Used `RollbackAsync()` when an exception occurs.
+- Tested the transaction using Postman and PostgreSQL.
+
+### Transaction Flow
+
+```text
+Begin Transaction
+        ↓
+Create Appointment
+        ↓
+Create Patient Notification
+        ↓
+Create Doctor Notification
+        ↓
+Save Changes
+        ↓
+Commit Transaction
+```
+
+If an error occurs:
+
+```text
+Create Appointment
+        ↓
+Create Notifications
+        ↓
+Exception
+        ↓
+Rollback
+        ↓
+Appointment + Notifications are not persisted
+```
+
+### Rollback Test
+
+A temporary exception was intentionally added before `CommitAsync()`:
+
+```csharp
+throw new Exception("Testing transaction rollback");
+```
+
+The request returned:
+
+```text
+500 Internal Server Error
+```
+
+The database was then checked and confirmed that the Appointment and related Notifications from the failed transaction were not persisted.
+
+### Successful Test
+
+After removing the temporary exception, the same request was executed again.
+
+Result:
+
+```text
+201 Created
+```
+
+The Appointment and both Notifications were successfully stored in the database.
+
+### Result
+
+The transaction was successfully verified in both scenarios:
+
+```text
+Success → Commit
+Failure → Rollback
+```
+
+The complete scenario and screenshots are documented in:
+
+```text
+Week_6_Day_4_Transaction_Rollback_Documentation_EN_Corrected.pdf
+```
+
 ---
 
 ## Week 6 Progress
@@ -130,7 +228,7 @@ Day 3 evidence includes:
 Day 1  → ✅ Completed
 Day 2  → ✅ Completed
 Day 3  → ✅ Completed
-Day 4  → ⏳ Pending
+Day 4  → ✅ Completed
 Day 5  → ⏳ Pending
 ```
 
