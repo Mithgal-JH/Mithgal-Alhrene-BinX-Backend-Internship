@@ -4,9 +4,9 @@
 
 Week 6 focuses on strengthening the Cardiac Patient Monitoring System through applied backend development and production-oriented API design.
 
-**Status:** 🟢 In Progress  
-**Current Day:** Day 4 — Completed  
-**Week Status:** In Progress
+**Status:** 🟢 Completed  
+**Current Day:** Day 5 — Completed  
+**Week Status:** Completed
 
 ## Week Objectives
 
@@ -29,7 +29,7 @@ During this week, the main goals are to:
 | Day 2 | EF Core Data Model, Fluent API & Database Seeding | ✅ Completed |
 | Day 3 | Core Routes I: Catalog & Read Operations | ✅ Completed |
 | Day 4 | Database Transactions & Rollback Testing | ✅ Completed |
-| Day 5 | — | ⏳ Pending |
+| Day 5 | Sprint Review, Postman Demo & Retrospective | ✅ Completed |
 
 ---
 
@@ -220,6 +220,125 @@ The complete scenario and screenshots are documented in:
 Week_6_Day_4_Transaction_Rollback_Documentation_EN_Corrected.pdf
 ```
 
+
+---
+
+## Day 5 — Completed
+
+### Sprint Review, Postman Demo & Retrospective
+
+Day 5 focused on closing Sprint 1 by reviewing the completed work, running the final automated test suite, verifying the project build, and completing the sprint retrospective.
+
+### Sprint Review
+
+The completed Sprint 1 work was reviewed across:
+
+- Patients read operations.
+- Pagination.
+- Search and filtering.
+- Sorting.
+- DTO projection.
+- Appointment creation.
+- Notifications.
+- Database transactions.
+- Rollback behavior.
+
+### Postman Demo
+
+The implemented API scenarios were verified through the existing Postman evidence.
+
+Read-operation scenarios demonstrated:
+
+- Pagination.
+- Search.
+- Gender filtering + sorting.
+- Combined filtering, sorting, and pagination.
+
+The demonstrated read-operation requests returned:
+
+```text
+200 OK
+```
+
+The appointment creation flow returned:
+
+```text
+201 Created
+```
+
+The intentional transaction failure returned:
+
+```text
+500 Internal Server Error
+```
+
+and was used to verify rollback behavior.
+
+### Automated Tests
+
+The complete test suite was executed using:
+
+```bash
+dotnet test
+```
+
+Final result:
+
+```text
+Total:   15
+Passed:  15
+Failed:  0
+Skipped: 0
+```
+
+**15/15 tests passed successfully.**
+
+### Build Verification
+
+The project was also verified using:
+
+```bash
+dotnet build
+```
+
+Result:
+
+```text
+Build succeeded
+```
+
+A `Microsoft.OpenApi 2.0.0` vulnerability warning was reported, but it did not cause any build or test failure.
+
+### Sprint Retrospective
+
+#### What Went Well
+
+- The sprint progressed incrementally from database work to API operations and transactions.
+- Read operations became more flexible through pagination, filtering, and sorting.
+- DTO projection kept API responses separated from EF Core entities.
+- Transaction handling protected multi-step appointment operations.
+- PostgreSQL and Postman were used to verify the actual system behavior.
+- The complete automated test suite passed successfully.
+
+#### What Could Be Improved
+
+- Testing can be planned alongside implementation instead of being left until the end of a task.
+- Documentation should remain synchronized with implementation throughout the sprint.
+
+#### Action for Sprint 2
+
+Continue writing tests alongside important business logic and keep API documentation synchronized with implementation changes.
+
+### Day 5 Result
+
+```text
+Sprint Review     → ✅ Completed
+Postman Demo      → ✅ Completed
+Tests             → ✅ 15/15 Passed
+Build             → ✅ Succeeded
+Retrospective     → ✅ Completed
+```
+
 ---
 
 ## Week 6 Progress
@@ -229,7 +348,7 @@ Day 1  → ✅ Completed
 Day 2  → ✅ Completed
 Day 3  → ✅ Completed
 Day 4  → ✅ Completed
-Day 5  → ⏳ Pending
+Day 5  → ✅ Completed
 ```
 
-**Week 6 — In Progress 🟢**
+**Week 6 — Completed 🟢**
