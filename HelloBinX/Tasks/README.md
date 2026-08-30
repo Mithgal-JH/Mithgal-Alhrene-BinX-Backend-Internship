@@ -13,7 +13,8 @@ This section contains my **weekly internship tasks**, practical exercises, and l
 | **3** | REST API, EF Core & CRUD                     | ✅ Completed | [View Week 3](./Week%203/README.md) |
 | **4** | Authentication, Authorization & API Security | ✅ Completed | [View Week 4](./Week%204/README.md) |
 | **5** | Testing, Error Handling & Project Begins  | ✅ Completed | [View Week 5](./Week%205/README.md) |
-| **6** | Phase 3 Sprint 1 — Applied Project Work    | 🟡 In Progress | [View Week 6](./Week%206/README.md) |
+| **6** | Phase 3 Sprint 1 — Applied Project Work    | ✅ Completed | [View Week 6](./Week%206/README.md) |
+| **7** | Phase 3 Sprint 2 — Authentication & Authorization | 🟡 In Progress | [View Week 7](./Week%207/README.md) |
 
 ---
 
@@ -141,12 +142,11 @@ Week 5 marked the transition from Phase 2 into Phase 3 and focused on testing, c
 
 ### Week 6 — Phase 3 Sprint 1 — Applied Project Work
 
-Week 6 is the first full applied-project sprint and focuses on turning the Cardiac Patient Monitoring System into a more structured, production-oriented backend.
+Week 6 focused on strengthening the Cardiac Patient Monitoring System through applied backend development and production-oriented API design.
 
 **Main topics:**
 
 - Sprint Planning
-- Database and ERD review
 - EF Core data modeling
 - Fluent API configuration
 - Entity relationships
@@ -155,39 +155,56 @@ Week 6 is the first full applied-project sprint and focuses on turning the Cardi
 - Seed data
 - Code-First migrations
 - PostgreSQL database verification
-- Core catalog and read routes
-- Write operations and business logic
-- Mentor code review
+- Pagination, filtering, and sorting
+- DTO projection
+- Database transactions
+- Rollback testing
+- Postman verification
 - Sprint Review and Retrospective
 
-### Current Progress
-
-**Day 1:** Sprint Planning & Project Database Design — ✅ Completed
-
-**Day 2:** EF Core Data Model & Migrations — ✅ Completed
-
-Day 2 included:
-
-- Fluent API configuration
-- Explicit `DeleteBehavior.Restrict`
-- Unique indexes
-- Medication seed data
-- `AddMedicationSeedData` migration
-- PostgreSQL database update
-- Migration history verification
-- Automated testing
-
-**Day 2 Test Result:**
-
-```text
-Total:   15
-Passed:  15
-Failed:  0
-Skipped: 0
-```
+**Status:** ✅ Completed
 
 📂 **Documentation:**  
 [View Week 6](./Week%206/README.md)
+
+---
+
+### Week 7 — Phase 3 Sprint 2 — Authentication & Authorization
+
+Week 7 focuses on implementing Authentication and Authorization in the Cardiac Patient Monitoring System.
+
+**Main topics:**
+
+- Sprint 2 Planning
+- ASP.NET Core Identity integration
+- Identity roles
+- Role seeding
+- Admin user seeding
+- Authentication
+- User Registration
+- Login
+- JWT-based authentication
+- Role-Based Authorization (RBAC)
+- Resource ownership
+- Protected API endpoints
+
+### Current Progress
+
+**Day 1:** Sprint 2 Planning & Identity Integration — ✅ Completed
+
+Day 1 included:
+
+- Defined the Sprint 2 goal.
+- Verified the existing `ApplicationDbContext` integration with `IdentityDbContext<IdentityUser>`.
+- Verified the existing Identity migration.
+- Defined the `Admin`, `Doctor`, and `Patient` roles.
+- Verified role seeding through `IdentitySeeder`.
+- Verified Admin account seeding.
+- Defined initial authorization responsibilities.
+- Identified resource ownership as an authorization requirement.
+
+📂 **Documentation:**  
+[View Week 7](./Week%207/README.md)
 
 ---
 
@@ -251,6 +268,6 @@ Tasks/
 
 ## 🚀 Internship Progress
 
-**Weeks Completed:** 5 / 10  
-**Current:** Week 6 — Day 2 Completed  
+**Weeks Completed:** 6 / 10  
+**Current:** Week 7 — Day 1 Completed  
 **Track:** Backend Development (.NET)
