@@ -7,7 +7,7 @@ Week 7 focuses on implementing Authentication and Authorization in the Cardiac P
 The week builds on the existing Capstone project and introduces secure user authentication, role-based authorization, and resource ownership rules.
 
 **Status:** 🟡 In Progress  
-**Current Day:** Day 1 — Completed  
+**Current Day:** Day 3 — Completed  
 **Week Status:** In Progress
 
 ## Week Objectives
@@ -28,8 +28,8 @@ During this week, the main goals are to:
 | Day | Topic | Status |
 |---|---|---|
 | Day 1 | Sprint 2 Planning & Identity Integration | ✅ Completed |
-| Day 2 | Authentication: Registration, Login & JWT | ⏳ Pending |
-| Day 3 | Role-Based Authorization (RBAC) | ⏳ Pending |
+| Day 2 | Authentication: Registration, Login & JWT | ✅ Completed |
+| Day 3 | Role-Based Authorization (RBAC) | ✅ Completed |
 | Day 4 | Resource Ownership & Protected Endpoints | ⏳ Pending |
 | Day 5 | Sprint Review, Testing & Retrospective | ⏳ Pending |
 
@@ -159,12 +159,125 @@ A Patient should not be able to access another Patient's private data simply bec
 
 ---
 
+## Day 3 — Completed
+
+### Role-Based Authorization (RBAC) & Ownership Validation
+
+Day 3 focused on validating Role-Based Authorization and resource ownership behavior in the Cardiac Patient Monitoring System API.
+
+The practical testing was performed using **Postman** with an authenticated patient account and the existing protected endpoints.
+
+### Authentication Validation
+
+A patient account was successfully authenticated through:
+
+```http
+POST /api/auth/login
+```
+
+Result:
+
+```text
+200 OK
+```
+
+A JWT token was returned and used as a Bearer Token for protected API requests.
+
+### Authorization & Ownership Tests
+
+The following requests were tested in Postman:
+
+| Test | Endpoint | Result |
+|---|---|---|
+| Patient Login | `POST /api/auth/login` | `200 OK` |
+| Access Patient Record | `GET /api/patients/15` | `200 OK` |
+| Access Another Patient | `GET /api/patients/9` | `403 Forbidden` |
+| Delete Patient | `DELETE /api/patients/1` | `403 Forbidden` |
+| Get Patient Medications | `GET /api/patientmedications` | `200 OK` |
+| Get Vital Signs | `GET /api/vitalsigns` | `200 OK` |
+
+### Ownership Validation
+
+The test:
+
+```http
+GET /api/patients/15
+```
+
+returned:
+
+```text
+200 OK
+```
+
+for the authenticated patient's allowed record.
+
+A request for another patient:
+
+```http
+GET /api/patients/9
+```
+
+returned:
+
+```text
+403 Forbidden
+```
+
+This validates that authentication alone does not grant access to another patient's protected resource.
+
+### Role-Based Access Validation
+
+The request:
+
+```http
+DELETE /api/patients/1
+```
+
+returned:
+
+```text
+403 Forbidden
+```
+
+This demonstrates that the authenticated patient is not authorized to perform an administrative delete operation.
+
+### Protected Endpoints
+
+The following protected collection endpoints were also verified:
+
+```http
+GET /api/patientmedications
+GET /api/vitalsigns
+```
+
+Both returned:
+
+```text
+200 OK
+```
+
+with valid responses.
+
+### Day 3 Outcome
+
+- [x] JWT authentication verified through Postman
+- [x] Protected endpoint access verified
+- [x] Own patient resource access verified
+- [x] Unauthorized access to another patient's resource rejected
+- [x] Unauthorized patient delete operation rejected
+- [x] Protected patient medications endpoint verified
+- [x] Protected vital signs endpoint verified
+- [x] RBAC and ownership behavior documented with Postman evidence
+
+---
+
 ## Week 7 Progress
 
 ```text
 Day 1  → ✅ Completed
-Day 2  → ⏳ Pending
-Day 3  → ⏳ Pending
+Day 2  → ✅ Completed
+Day 3  → ✅ Completed
 Day 4  → ⏳ Pending
 Day 5  → ⏳ Pending
 ```
