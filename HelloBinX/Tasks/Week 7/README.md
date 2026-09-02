@@ -4,10 +4,10 @@
 
 Week 7 focuses on implementing Authentication and Authorization in the Cardiac Patient Monitoring System.
 
-The week builds on the existing Capstone project and introduces secure user authentication, role-based authorization, and resource ownership rules.
+The week builds on the existing Capstone project and introduces secure user authentication, role-based authorization, resource ownership rules, and custom middleware.
 
 **Status:** 🟡 In Progress  
-**Current Day:** Day 3 — Completed  
+**Current Day:** Day 4 — Completed  
 **Week Status:** In Progress
 
 ## Week Objectives
@@ -22,6 +22,7 @@ During this week, the main goals are to:
 - Protect API endpoints.
 - Apply resource ownership rules.
 - Prevent users from accessing resources that do not belong to them.
+- Implement custom middleware for cross-cutting concerns.
 
 ## Daily Progress
 
@@ -30,7 +31,7 @@ During this week, the main goals are to:
 | Day 1 | Sprint 2 Planning & Identity Integration | ✅ Completed |
 | Day 2 | Authentication: Registration, Login & JWT | ✅ Completed |
 | Day 3 | Role-Based Authorization (RBAC) | ✅ Completed |
-| Day 4 | Resource Ownership & Protected Endpoints | ⏳ Pending |
+| Day 4 | Custom Middleware & Cross-Cutting Concerns | ✅ Completed |
 | Day 5 | Sprint Review, Testing & Retrospective | ⏳ Pending |
 
 ---
@@ -41,21 +42,9 @@ During this week, the main goals are to:
 
 Day 1 focused on preparing Sprint 2 and verifying the existing ASP.NET Core Identity integration in the Cardiac Patient Monitoring System.
 
-The existing Capstone project was used as the starting point, with the Identity foundation already integrated into the application.
-
 ### Sprint 2 Goal
 
 > Implement Authentication and Authorization in the Cardiac Patient Monitoring System.
-
-The sprint will cover:
-
-- Authentication
-- User Registration
-- Login
-- JWT-based authentication
-- Role-Based Authorization (RBAC)
-- Resource Ownership
-- Protected API endpoints
 
 ### ASP.NET Core Identity Integration
 
@@ -65,20 +54,6 @@ The existing `ApplicationDbContext` integrates ASP.NET Core Identity:
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 ```
 
-The same database context contains both Identity and application entities.
-
-Existing application entities include:
-
-- `Patient`
-- `Doctor`
-- `VitalSign`
-- `Medication`
-- `PatientMedication`
-- `Appointment`
-- `Notification`
-
-### Identity Roles
-
 The application defines three roles:
 
 ```text
@@ -87,71 +62,13 @@ Doctor
 Patient
 ```
 
-These roles will be used for Role-Based Authorization.
-
-### Role Seeding
-
-The existing `IdentitySeeder` checks whether each role exists before creating it.
-
-```csharp
-if (!await roleManager.RoleExistsAsync(role))
-{
-    await roleManager.CreateAsync(new IdentityRole(role));
-}
-```
-
-This prevents duplicate roles when the seeding process runs.
-
-### Admin Seeding
-
-The `IdentitySeeder` also creates and configures an initial Admin account using credentials from application configuration.
-
-The process:
-
-1. Reads the Admin email and password from configuration.
-2. Checks whether the Admin account already exists.
-3. Creates the account if necessary.
-4. Ensures the account belongs to the `Admin` role.
-
-```csharp
-if (!await userManager.IsInRoleAsync(admin, "Admin"))
-{
-    await userManager.AddToRoleAsync(admin, "Admin");
-}
-```
-
-### Authorization Planning
-
-The main application roles and responsibilities were identified:
-
-| Role | Responsibility |
-|---|---|
-| Admin | Manage system-level resources |
-| Doctor | Access and manage authorized patient data |
-| Patient | Access their own data |
-
-Authorization will consider both the user's role and resource ownership.
-
-For example:
-
-```text
-Authenticated User
-        ↓
-Role Authorization
-        ↓
-Resource Ownership
-        ↓
-Allow / Deny Access
-```
-
-A Patient should not be able to access another Patient's private data simply because they are authenticated.
+Role and Admin seeding were verified, and authorization responsibilities were planned around both role-based access and resource ownership.
 
 ### Day 1 Outcome
 
 - [x] Sprint 2 goal defined
-- [x] Existing ASP.NET Core Identity integration verified
-- [x] Identity migration already exists
-- [x] `Admin`, `Doctor`, and `Patient` roles defined
+- [x] ASP.NET Core Identity integration verified
+- [x] Identity roles defined
 - [x] Role seeding implemented
 - [x] Admin seeding implemented
 - [x] Authorization responsibilities identified
@@ -159,17 +76,80 @@ A Patient should not be able to access another Patient's private data simply bec
 
 ---
 
+## Day 2 — Completed
+
+### Authentication: Registration, Login & JWT
+
+Day 2 focused on implementing and validating authentication using ASP.NET Core Identity and JWT.
+
+### Authentication Flow
+
+```text
+Client
+   ↓
+AuthController
+   ↓
+AuthService
+   ↓
+ASP.NET Core Identity
+   ↓
+JWT Token
+```
+
+### Implemented Features
+
+- User registration.
+- User login.
+- Password verification using ASP.NET Core Identity.
+- JWT token generation.
+- JWT Bearer Authentication.
+- User ID and Email claims.
+- Issuer and Audience configuration.
+- Token signing and expiration.
+
+### Login Endpoint
+
+```http
+POST /api/auth/login
+```
+
+Successful authentication returns:
+
+```text
+200 OK
+```
+
+with a JWT token.
+
+Invalid credentials are rejected with:
+
+```text
+401 Unauthorized
+```
+
+JWT claims and token expiration were also verified during testing.
+
+### Day 2 Outcome
+
+- [x] Registration flow implemented
+- [x] Login flow implemented
+- [x] JWT generation implemented
+- [x] JWT Bearer Authentication configured
+- [x] JWT claims verified
+- [x] Invalid login rejected
+- [x] Token expiration verified
+
+---
+
 ## Day 3 — Completed
 
 ### Role-Based Authorization (RBAC) & Ownership Validation
 
-Day 3 focused on validating Role-Based Authorization and resource ownership behavior in the Cardiac Patient Monitoring System API.
-
-The practical testing was performed using **Postman** with an authenticated patient account and the existing protected endpoints.
+Day 3 focused on validating Role-Based Authorization and resource ownership behavior using Postman with authenticated requests.
 
 ### Authentication Validation
 
-A patient account was successfully authenticated through:
+A patient account was authenticated through:
 
 ```http
 POST /api/auth/login
@@ -181,11 +161,9 @@ Result:
 200 OK
 ```
 
-A JWT token was returned and used as a Bearer Token for protected API requests.
+The returned JWT was used as a Bearer Token for protected API requests.
 
 ### Authorization & Ownership Tests
-
-The following requests were tested in Postman:
 
 | Test | Endpoint | Result |
 |---|---|---|
@@ -198,77 +176,174 @@ The following requests were tested in Postman:
 
 ### Ownership Validation
 
-The test:
+The authenticated patient could access their allowed patient resource:
 
 ```http
 GET /api/patients/15
 ```
 
-returned:
+Result:
 
 ```text
 200 OK
 ```
 
-for the authenticated patient's allowed record.
-
-A request for another patient:
+Access to another patient's protected resource:
 
 ```http
 GET /api/patients/9
 ```
 
-returned:
+Result:
 
 ```text
 403 Forbidden
 ```
 
-This validates that authentication alone does not grant access to another patient's protected resource.
+This confirms that authentication alone does not grant access to another patient's private data.
 
 ### Role-Based Access Validation
 
-The request:
+The patient attempted:
 
 ```http
 DELETE /api/patients/1
 ```
 
-returned:
+Result:
 
 ```text
 403 Forbidden
 ```
 
-This demonstrates that the authenticated patient is not authorized to perform an administrative delete operation.
-
-### Protected Endpoints
-
-The following protected collection endpoints were also verified:
-
-```http
-GET /api/patientmedications
-GET /api/vitalsigns
-```
-
-Both returned:
-
-```text
-200 OK
-```
-
-with valid responses.
+This confirms that the Patient role cannot perform the protected administrative delete operation.
 
 ### Day 3 Outcome
 
-- [x] JWT authentication verified through Postman
-- [x] Protected endpoint access verified
-- [x] Own patient resource access verified
-- [x] Unauthorized access to another patient's resource rejected
-- [x] Unauthorized patient delete operation rejected
-- [x] Protected patient medications endpoint verified
-- [x] Protected vital signs endpoint verified
-- [x] RBAC and ownership behavior documented with Postman evidence
+- [x] JWT authentication verified
+- [x] Protected endpoints verified
+- [x] Own-resource access verified
+- [x] Unauthorized resource access rejected
+- [x] Unauthorized delete operation rejected
+- [x] RBAC and ownership behavior documented
+
+---
+
+## Day 4 — Completed
+
+### Custom Middleware & Request Timing
+
+Day 4 focused on implementing a custom ASP.NET Core Middleware for measuring API request execution time.
+
+The goal was to apply a genuine cross-cutting concern without duplicating timing logic inside Controllers.
+
+### RequestTimingMiddleware
+
+A custom `RequestTimingMiddleware` was implemented using:
+
+- `RequestDelegate`
+- `ILogger<RequestTimingMiddleware>`
+- `Stopwatch`
+- `try/finally`
+
+The Middleware starts timing before passing the request to the next pipeline component:
+
+```csharp
+var stopwatch = Stopwatch.StartNew();
+
+try
+{
+    await _next(context);
+}
+finally
+{
+    stopwatch.Stop();
+
+    _logger.LogInformation(
+        "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds} ms",
+        context.Request.Method,
+        context.Request.Path,
+        context.Response.StatusCode,
+        stopwatch.ElapsedMilliseconds);
+}
+```
+
+### Structured Logging
+
+The Middleware records:
+
+- HTTP Method
+- Request Path
+- Response Status Code
+- Request Execution Time
+
+Example:
+
+```text
+HTTP GET /api/patientmedications responded 200 in 27 ms
+```
+
+### Middleware Ordering
+
+The existing `ExceptionHandlingMiddleware` is placed before `RequestTimingMiddleware`.
+
+Conceptually:
+
+```text
+HTTP Request
+     ↓
+ExceptionHandlingMiddleware
+     ↓
+RequestTimingMiddleware
+     ↓
+Authentication / Authorization
+     ↓
+Controller
+     ↓
+HTTP Response
+     ↑
+RequestTimingMiddleware
+     ↑
+ExceptionHandlingMiddleware
+```
+
+Using `try/finally` in the timing middleware ensures that the timing log is executed when the downstream pipeline completes, including exception scenarios.
+
+### Testing
+
+The application was successfully built and executed using:
+
+```powershell
+dotnet build
+dotnet run
+```
+
+The Middleware was tested across multiple API endpoints.
+
+Example results:
+
+```text
+HTTP POST /api/auth/login responded 200 in 954 ms
+
+HTTP GET /api/patientmedications/2 responded 200 in 361 ms
+
+HTTP GET /api/patientmedications/2 responded 200 in 18 ms
+
+HTTP GET /api/patientmedications responded 200 in 27 ms
+```
+
+These results confirm that the Middleware is applied globally across different API requests.
+
+### Day 4 Outcome
+
+- [x] Custom `RequestTimingMiddleware` implemented
+- [x] Typed `ILogger<RequestTimingMiddleware>` configured
+- [x] Request timing implemented using `Stopwatch`
+- [x] `try/finally` used for reliable timing logging
+- [x] Structured logging implemented
+- [x] HTTP method, path, status code, and execution time logged
+- [x] Middleware ordering verified
+- [x] Multiple API endpoints tested successfully
 
 ---
 
@@ -278,8 +353,12 @@ with valid responses.
 Day 1  → ✅ Completed
 Day 2  → ✅ Completed
 Day 3  → ✅ Completed
-Day 4  → ⏳ Pending
+Day 4  → ✅ Completed
 Day 5  → ⏳ Pending
 ```
 
 **Week 7 — In Progress 🟡**
+
+## Next
+
+Day 5 will focus on the Sprint Review, Postman demonstration, and Sprint 2 Retrospective.
