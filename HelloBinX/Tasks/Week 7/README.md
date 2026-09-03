@@ -6,9 +6,9 @@ Week 7 focuses on implementing Authentication and Authorization in the Cardiac P
 
 The week builds on the existing Capstone project and introduces secure user authentication, role-based authorization, resource ownership rules, and custom middleware.
 
-**Status:** 🟡 In Progress  
-**Current Day:** Day 4 — Completed  
-**Week Status:** In Progress
+**Status:** 🟢 Completed  
+**Current Day:** Day 5 — Completed  
+**Week Status:** Completed
 
 ## Week Objectives
 
@@ -32,7 +32,7 @@ During this week, the main goals are to:
 | Day 2 | Authentication: Registration, Login & JWT | ✅ Completed |
 | Day 3 | Role-Based Authorization (RBAC) | ✅ Completed |
 | Day 4 | Custom Middleware & Cross-Cutting Concerns | ✅ Completed |
-| Day 5 | Sprint Review, Testing & Retrospective | ⏳ Pending |
+| Day 5 | Sprint Review, Testing & Retrospective | ✅ Completed |
 
 ---
 
@@ -347,6 +347,67 @@ These results confirm that the Middleware is applied globally across different A
 
 ---
 
+## Day 5 — Completed
+
+### Sprint 2 Close-Out
+
+Day 5 closed Sprint 2 through the final Postman demonstration, Sprint Review, and Retrospective.
+
+### Postman Demo
+
+The complete authentication and authorization flow was demonstrated:
+
+| # | Request | Result |
+|---|---|---|
+| 1 | Register Patient | `200 OK` |
+| 2 | Patient Login | `200 OK` |
+| 3 | Get Own Patient Record | `200 OK` |
+| 4 | Get Another Patient Record | `403 Forbidden` |
+| 5 | Patient Attempts Delete | `403 Forbidden` |
+| 6 | Admin Login | `200 OK` |
+| 7 | Admin Deletes Patient | `204 No Content` |
+
+### Authorization Rejection Cases
+
+Two deliberate authorization rejection cases were demonstrated:
+
+- Patient attempting to access another patient's record → `403 Forbidden`
+- Patient attempting to delete a patient record → `403 Forbidden`
+
+These cases confirm that authorization is not only allowing valid requests but also correctly rejecting unauthorized operations.
+
+### Sprint 2 Retrospective
+
+#### What Went Well
+
+- JWT authentication was successfully demonstrated for Patient and Admin users.
+- RBAC behavior was verified through real API requests.
+- Patient ownership restrictions were successfully tested.
+- Protected Admin functionality was successfully demonstrated.
+- Postman evidence was captured for Sprint 2 close-out.
+
+#### What Could Be Improved
+
+Keep the Postman collection and supporting documentation synchronized with implementation changes throughout the sprint so final verification is faster and easier.
+
+#### Action for Sprint 3
+
+Continue applying a verification-first approach by keeping API testing and evidence aligned with each important feature implemented in the next sprint.
+
+### Day 5 Outcome
+
+- [x] Sprint 2 authentication and authorization demo completed
+- [x] Patient JWT authentication verified
+- [x] Admin JWT authentication verified
+- [x] Ownership rejection verified
+- [x] RBAC rejection verified
+- [x] Admin protected operation verified
+- [x] Postman evidence captured
+- [x] Sprint 2 retrospective completed
+- [x] Sprint 2 close-out completed
+
+---
+
 ## Week 7 Progress
 
 ```text
@@ -354,11 +415,28 @@ Day 1  → ✅ Completed
 Day 2  → ✅ Completed
 Day 3  → ✅ Completed
 Day 4  → ✅ Completed
-Day 5  → ⏳ Pending
+Day 5  → ✅ Completed
 ```
 
-**Week 7 — In Progress 🟡**
+**Week 7 — Completed 🟢**
 
-## Next
+## Week 7 Summary
 
-Day 5 will focus on the Sprint Review, Postman demonstration, and Sprint 2 Retrospective.
+Week 7 completed the Authentication & Authorization phase of the Cardiac Patient Monitoring System.
+
+The week covered:
+
+- ASP.NET Core Identity integration
+- User registration and login
+- JWT-based authentication
+- Role-Based Authorization (RBAC)
+- Resource ownership validation
+- Protected API endpoints
+- Custom middleware
+- Request timing and structured logging
+- Sprint 2 Postman demonstration
+- Sprint 2 retrospective
+
+**Week 7 is complete.**
+
+> **Note:** The Notion deliverable was cancelled and is not included in the Week 7 workflow.
