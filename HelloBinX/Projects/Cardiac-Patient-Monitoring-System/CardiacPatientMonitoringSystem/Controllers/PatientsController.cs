@@ -18,9 +18,33 @@ public class PatientsController : ControllerBase
         _patientService = patientService;
     }
 
-    [Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PatientResponseDto>>> GetAll()
+    public async Task<ActionResult<PaginatedResponseDto<PatientResponseDto>>> GetAll(
+        int page = 1,
+        int pageSize = 10,
+        string? search = null,
+        string? gender = null,
+        string? sort = null)
+    {
+        var patients = await _patientService.GetAllAsync(
+            page,
+            pageSize,
+            search,
+            gender,
+            sort);
+
+        return Ok(patients);
+    }
+
+    [Authorize(Roles = "Doctor")]
+    [HttpGet("my-patients")]
+    public async Task<ActionResult<PaginatedResponseDto<PatientResponseDto>>> GetMyPatients(
+        int page = 1,
+        int pageSize = 10,
+        string? search = null,
+        string? gender = null,
+        string? sort = null)
     {
         var userId = User.FindFirstValue(
             ClaimTypes.NameIdentifier);
@@ -28,12 +52,33 @@ public class PatientsController : ControllerBase
         if (userId is null)
             return Unauthorized();
 
-        var patients = await _patientService.GetAllAsync(
+        var patients = await _patientService.GetMyPatientsAsync(
             userId,
-            User.IsInRole("Admin"),
-            User.IsInRole("Doctor"));
+            page,
+            pageSize,
+            search,
+            gender,
+            sort);
 
         return Ok(patients);
+    }
+
+    [Authorize(Roles = "Patient")]
+    [HttpGet("my")]
+    public async Task<ActionResult<PatientResponseDto>> GetMyPatient()
+    {
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _patientService.GetMyPatientAsync(userId);
+
+        if (result.Patient is null)
+            return NotFound();
+
+        return Ok(result.Patient);
     }
 
     // Accessible by all authenticated roles and adult only

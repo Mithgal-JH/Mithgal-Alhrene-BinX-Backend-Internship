@@ -1,66 +1,73 @@
-using CardiacPatientMonitoringSystem.Data;
 using CardiacPatientMonitoringSystem.DTOs.Patients;
 using CardiacPatientMonitoringSystem.Models;
+using CardiacPatientMonitoringSystem.Repositories.Interfaces;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace CardiacPatientMonitoringSystem.Services;
 
 public class PatientService : IPatientService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IPatientRepository _repository;
 
-    public PatientService(ApplicationDbContext context)
+    public PatientService(IPatientRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
-    public async Task<IEnumerable<PatientResponseDto>> GetAllAsync(
+    public async Task<PaginatedResponseDto<PatientResponseDto>> GetAllAsync(
+        int page,
+        int pageSize,
+        string? search,
+        string? gender,
+        string? sort)
+    {
+        var patients = await _repository.GetAllAsync(
+            page,
+            pageSize,
+            search,
+            gender,
+            sort);
+
+        return patients;
+    }
+
+    public async Task<PaginatedResponseDto<PatientResponseDto>> GetMyPatientsAsync(
+        string userId,
+        int page,
+        int pageSize,
+        string? search,
+        string? gender,
+        string? sort)
+    {
+        var patients = await _repository.GetMyPatientsAsync(
+            userId,
+            page,
+            pageSize,
+            search,
+            gender,
+            sort);
+
+        return patients;
+    }
+
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)> GetMyPatientAsync(
+        string userId)
+    {
+        var patient = await _repository.GetMyPatientAsync(userId);
+
+        if (patient is null)
+            return (null, false);
+
+        return (BuildResponse(patient), false);
+    }
+
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)> GetByIdAsync(
+        int id,
         string userId,
         bool isAdmin,
         bool isDoctor)
     {
-        
-        var query = _context.Patients
-            .AsNoTracking()
-            .AsQueryable();
-
-        if (!isAdmin && isDoctor)
-        {
-            query = query.Where(p =>
-                p.Appointments.Any(a =>
-                    a.Doctor.UserId == userId));
-        }
-
-        return await query
-            .Select(p => new PatientResponseDto
-            {
-                PatientId = p.PatientId,
-                MedicalRecordNumber = p.MedicalRecordNumber,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                DateOfBirth = p.DateOfBirth,
-                Gender = p.Gender,
-                Phone = p.Phone,
-                Email = p.Email,
-                Address = p.Address,
-                EmergencyContactName = p.EmergencyContactName,
-                EmergencyContactPhone = p.EmergencyContactPhone,
-                MedicalNotes = p.MedicalNotes
-            })
-            .ToListAsync();
-    }
-
-    public async Task<(PatientResponseDto? Patient, bool NotOwner)>
-        GetByIdAsync(
-            int id,
-            string userId,
-            bool isAdmin,
-            bool isDoctor)
-    {
-        var patient = await _context.Patients
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.PatientId == id);
+        var patient = await _repository.GetByIdAsync(id);
 
         if (patient is null)
             return (null, false);
@@ -68,7 +75,7 @@ public class PatientService : IPatientService
         if (!isAdmin)
         {
             var hasAccess = isDoctor
-                ? await HasDoctorAccessAsync(id, userId)
+                ? await _repository.HasDoctorAccessAsync(id, userId)
                 : patient.UserId == userId;
 
             if (!hasAccess)
@@ -96,28 +103,24 @@ public class PatientService : IPatientService
             MedicalNotes = dto.MedicalNotes
         };
 
-        _context.Patients.Add(patient);
-
-        await _context.SaveChangesAsync();
+        await _repository.AddAsync(patient);
 
         return BuildResponse(patient);
     }
 
-    public async Task<(PatientResponseDto? Patient, bool NotOwner)>
-        UpdateAsync(
-            int id,
-            UpdatePatientDto dto,
-            string userId,
-            bool isDoctor)
+    public async Task<(PatientResponseDto? Patient, bool NotOwner)> UpdateAsync(
+        int id,
+        UpdatePatientDto dto,
+        string userId,
+        bool isDoctor)
     {
-        var patient = await _context.Patients
-            .FirstOrDefaultAsync(p => p.PatientId == id);
+        var patient = await _repository.GetByIdAsync(id);
 
         if (patient is null)
             return (null, false);
 
         var hasAccess = isDoctor
-            ? await HasDoctorAccessAsync(id, userId)
+            ? await _repository.HasDoctorAccessAsync(id, userId)
             : patient.UserId == userId;
 
         if (!hasAccess)
@@ -135,38 +138,24 @@ public class PatientService : IPatientService
         patient.EmergencyContactPhone = dto.EmergencyContactPhone;
         patient.MedicalNotes = dto.MedicalNotes;
 
-        await _context.SaveChangesAsync();
+        await _repository.UpdateAsync(patient);
 
         return (BuildResponse(patient), false);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var patient = await _context.Patients
-            .FirstOrDefaultAsync(p => p.PatientId == id);
+        var patient = await _repository.GetByIdAsync(id);
 
         if (patient is null)
             return false;
 
-        _context.Patients.Remove(patient);
-
-        await _context.SaveChangesAsync();
+        await _repository.DeleteAsync(patient);
 
         return true;
     }
 
-    private async Task<bool> HasDoctorAccessAsync(
-        int patientId,
-        string userId)
-    {
-        return await _context.Appointments
-            .AnyAsync(a =>
-                a.PatientId == patientId &&
-                a.Doctor.UserId == userId);
-    }
-
-    private static PatientResponseDto BuildResponse(
-        Patient patient)
+    private static PatientResponseDto BuildResponse(Patient patient)
     {
         return new PatientResponseDto
         {
