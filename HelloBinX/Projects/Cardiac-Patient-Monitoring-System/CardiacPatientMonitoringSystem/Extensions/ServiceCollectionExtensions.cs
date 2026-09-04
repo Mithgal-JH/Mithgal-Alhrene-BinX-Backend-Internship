@@ -2,6 +2,8 @@ using CardiacPatientMonitoringSystem.Services;
 using CardiacPatientMonitoringSystem.Services.Interfaces;
 using CardiacPatientMonitoringSystem.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using CardiacPatientMonitoringSystem.Repositories.Interfaces;
+using CardiacPatientMonitoringSystem.Repositories;
 
 namespace CardiacPatientMonitoringSystem.Extensions;
 
@@ -18,6 +20,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVitalSignService, VitalSignService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAuthorizationHandler, AdultOnlyHandler>();
+
+        services.AddScoped<IPatientRepository, PatientRepository>();
         return services;
     }
 }

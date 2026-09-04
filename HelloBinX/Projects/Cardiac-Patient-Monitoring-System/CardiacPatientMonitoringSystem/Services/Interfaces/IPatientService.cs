@@ -4,10 +4,23 @@ namespace CardiacPatientMonitoringSystem.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientResponseDto>> GetAllAsync(
+    Task<PaginatedResponseDto<PatientResponseDto>> GetAllAsync(
+        int page,
+        int pageSize,
+        string? search,
+        string? gender,
+        string? sort);
+
+    Task<PaginatedResponseDto<PatientResponseDto>> GetMyPatientsAsync(
         string userId,
-        bool isAdmin,
-        bool isDoctor);
+        int page,
+        int pageSize,
+        string? search,
+        string? gender,
+        string? sort);
+
+    Task<(PatientResponseDto? Patient, bool NotOwner)> GetMyPatientAsync(
+        string userId);
 
     Task<(PatientResponseDto? Patient, bool NotOwner)> GetByIdAsync(
         int id,
