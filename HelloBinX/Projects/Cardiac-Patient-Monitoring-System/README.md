@@ -16,6 +16,9 @@ The project is built with **ASP.NET Core Web API**, **Entity Framework Core**, *
 - Input validation with FluentValidation
 - Entity Framework Core migrations
 - PostgreSQL database
+- Repository-based data access
+- Patient pagination, search, filtering, and sorting
+- Automated unit and integration tests
 - Postman API collection
 - API, authorization, and API testing documentation
 
@@ -42,6 +45,17 @@ Authorization is implemented using ASP.NET Core authentication and role-based ru
 
 Vital signs do not currently have an update endpoint because they represent historical measurements.
 
+### Patient Query and Access
+
+The Patients API also supports:
+
+- Pagination using `page` and `pageSize`
+- Search
+- Filtering by gender
+- Sorting
+- Doctor-specific patient access through `GET /patients/my-patients`
+- Patient access to their own data through `GET /patients/my`
+
 ## Project Structure
 
 ```text
@@ -52,6 +66,8 @@ CardiacPatientMonitoringSystem/
 ├── Extensions/         # Service registration/extensions
 ├── Migrations/         # EF Core database migrations
 ├── Models/             # Domain entities
+├── Repositories/       # Data access layer
+│   └── Interfaces/
 ├── Services/           # Business logic
 │   └── Interfaces/
 ├── Validation/         # FluentValidation validators
@@ -70,6 +86,7 @@ CardiacPatientMonitoringSystem/
 - ASP.NET Core Identity
 - JWT Bearer Authentication
 - FluentValidation
+- xUnit
 - Postman
 
 ## Running the Project
@@ -126,6 +143,16 @@ docs/Cardiac_API_Postman_Scenario_With_Explained_Screenshots.pdf
 
 This document provides evidence of the endpoint testing performed during development, including successful CRUD operations and authentication/authorization-related testing.
 
+## Automated Tests
+
+The project includes automated unit and integration tests covering services and API behavior.
+
+Test projects and supporting test infrastructure are included in:
+
+```text
+CardiacPatientMonitoringSystem.Tests/
+```
+
 ## Postman
 
 The project includes a ready-to-use Postman collection:
@@ -148,4 +175,4 @@ This includes the ERD and normalization documentation.
 
 ## Status
 
-The project includes the main API functionality, authentication, authorization, validation, database migrations, API documentation, authorization documentation, and Postman testing evidence required for the current version of the system.
+The project includes the main API functionality, authentication, authorization, validation, repository-based data access, database migrations, patient query/access features, API documentation, authorization documentation, Postman testing evidence, and automated tests required for the current version of the system.
