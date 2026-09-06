@@ -12,9 +12,10 @@ This section contains my **weekly internship tasks**, practical exercises, and l
 | **2** | Advanced C# & ASP.NET Core Foundations       | ✅ Completed | [View Week 2](./Week%202/README.md) |
 | **3** | REST API, EF Core & CRUD                     | ✅ Completed | [View Week 3](./Week%203/README.md) |
 | **4** | Authentication, Authorization & API Security | ✅ Completed | [View Week 4](./Week%204/README.md) |
-| **5** | Testing, Error Handling & Project Begins  | ✅ Completed | [View Week 5](./Week%205/README.md) |
-| **6** | Phase 3 Sprint 1 — Applied Project Work    | ✅ Completed | [View Week 6](./Week%206/README.md) |
-| **7** | Phase 3 Sprint 2 — Authentication & Authorization | 🟡 In Progress | [View Week 7](./Week%207/README.md) |
+| **5** | Testing, Error Handling & Project Begins     | ✅ Completed | [View Week 5](./Week%205/README.md) |
+| **6** | Phase 3 Sprint 1 — Applied Project Work      | ✅ Completed | [View Week 6](./Week%206/README.md) |
+| **7** | Phase 3 Sprint 2 — Authentication & Authorization | ✅ Completed | [View Week 7](./Week%207/README.md) |
+| **8** | Phase 3 Sprint 3 — Advanced Queries & Performance | 🟡 In Progress | [View Week 8](./Week%208/README.md) |
 
 ---
 
@@ -171,7 +172,7 @@ Week 6 focused on strengthening the Cardiac Patient Monitoring System through ap
 
 ### Week 7 — Phase 3 Sprint 2 — Authentication & Authorization
 
-Week 7 focuses on implementing Authentication and Authorization in the Cardiac Patient Monitoring System.
+Week 7 focused on implementing Authentication and Authorization in the Cardiac Patient Monitoring System.
 
 **Main topics:**
 
@@ -188,23 +189,46 @@ Week 7 focuses on implementing Authentication and Authorization in the Cardiac P
 - Resource ownership
 - Protected API endpoints
 
-### Current Progress
-
-**Day 1:** Sprint 2 Planning & Identity Integration — ✅ Completed
-
-Day 1 included:
-
-- Defined the Sprint 2 goal.
-- Verified the existing `ApplicationDbContext` integration with `IdentityDbContext<IdentityUser>`.
-- Verified the existing Identity migration.
-- Defined the `Admin`, `Doctor`, and `Patient` roles.
-- Verified role seeding through `IdentitySeeder`.
-- Verified Admin account seeding.
-- Defined initial authorization responsibilities.
-- Identified resource ownership as an authorization requirement.
+**Status:** ✅ Completed
 
 📂 **Documentation:**  
 [View Week 7](./Week%207/README.md)
+
+---
+
+### Week 8 — Phase 3 Sprint 3 — Advanced Queries & Performance
+
+Week 8 focuses on advanced database querying and performance tuning in the Cardiac Patient Monitoring System.
+
+**Main topics:**
+
+- Sprint 3 Planning
+- Advanced LINQ queries
+- Query performance analysis
+- The N+1 query problem
+- Identifying repeated EF Core database queries
+- Appointment summary endpoint
+- EF Core navigation properties
+- Query optimization
+- SQL query logging and verification
+- Performance-oriented API design
+
+### Current Progress
+
+**Day 1:** Advanced Queries & N+1 Problem — ✅ Completed
+
+Day 1 included:
+
+- Implemented an appointment summary endpoint.
+- Demonstrated a real N+1 query scenario using EF Core navigation properties.
+- Verified the generated SQL queries through EF Core logging.
+- Observed the repeated Patient and Doctor queries for appointment records.
+- Tested the endpoint through the running API.
+- Confirmed the endpoint returned `200 OK`.
+- Documented the observed N+1 behavior for mentor review.
+
+📂 **Documentation:**  
+[View Week 8](./Week%208/README.md)
 
 ---
 
@@ -255,19 +279,34 @@ Tasks/
 │   ├── Day 4/
 │   └── Day 5/
 │
-└── Week 6/
+├── Week 6/
+│   ├── README.md
+│   ├── Day 1/
+│   ├── Day 2/
+│   ├── Day 3/
+│   ├── Day 4/
+│   └── Day 5/
+│
+├── Week 7/
+│   ├── README.md
+│   ├── Day 1/
+│   ├── Day 2/
+│   ├── Day 3/
+│   ├── Day 4/
+│   └── Day 5/
+│
+└── Week 8/
     ├── README.md
-    ├── Day 1/
-    ├── Day 2/
-    ├── Day 3/
-    ├── Day 4/
-    └── Day 5/
+    └── Day 1/
+        ├── README.md
+        ├── Cardiac-Patient-Monitoring-System/
+        └── Sprint3_Cardiac_Patient_Monitoring_System.pdf
 ```
 
 ---
 
 ## 🚀 Internship Progress
 
-**Weeks Completed:** 6 / 10  
-**Current:** Week 7 — Day 1 Completed  
+**Weeks Completed:** 7 / 10  
+**Current:** Week 8 — Day 1 Completed  
 **Track:** Backend Development (.NET)

@@ -16,9 +16,10 @@ This repository contains my practical work, daily tasks, backend projects, docum
 | **4** | Authentication, Authorization & API Security | ✅ Completed |
 | **5** | ASP.NET Core Backend Project | ✅ Completed |
 | **6** | Cardiac Patient Monitoring System | ✅ Completed |
-| **7** | Authentication & Authorization | 🟡 In Progress |
+| **7** | Authentication & Authorization | ✅ Completed |
+| **8** | Advanced Queries, N+1 Problem & Performance Tuning | 🟡 In Progress |
 
-**Progress:** 6 / 10 Weeks  
+**Progress:** 7 / 10 Weeks  
 **Track:** Backend Development (.NET)
 
 ---
@@ -38,7 +39,8 @@ HelloBinX/
 │   ├── Week 4/
 │   ├── Week 5/
 │   ├── Week 6/
-│   └── Week 7/
+│   ├── Week 7/
+│   └── Week 8/
 │
 └── Projects/
     ├── README.md
