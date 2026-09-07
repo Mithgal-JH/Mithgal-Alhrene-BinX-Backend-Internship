@@ -1,0 +1,811 @@
+{
+  "info": {
+    "_postman_id": "51c67a17-70c0-4bd5-8177-f433452ed57e",
+    "name": "Cardiac Patient Monitoring System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51714834",
+    "_collection_link": "https://go.postman.co/collection/51714834-51c67a17-70c0-4bd5-8177-f433452ed57e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"medicalRecordNumber\": \"MRN-0002\",\r\n  \"firstName\": \"Khaled\",\r\n  \"lastName\": \"Ahmad\",\r\n  \"dateOfBirth\": \"1988-10-20\",\r\n  \"gender\": \"Male\",\r\n  \"phone\": \"0599444444\",\r\n  \"email\": \"khaled.ahmad@example.com\",\r\n  \"address\": \"Hebron, Palestine\",\r\n  \"emergencyContactName\": \"Ali Ahmad\",\r\n  \"emergencyContactPhone\": \"0599555555\",\r\n  \"medicalNotes\": \"No known allergies\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Doctor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Khaled\",\r\n  \"lastName\": \"Ahmad\",\r\n  \"email\": \"khaled.doctor@example.com\",\r\n  \"phone\": \"0599333333\",\r\n  \"specialization\": \"Cardiology\",\r\n  \"licenseNumber\": \"12333\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Ahmad Updated\",\r\n    \"lastName\": \"Ali\",\r\n    \"email\": \"doctor2@example.com\",\r\n    \"phone\": \"0599111111\",\r\n    \"specialization\": \"Cardiology\",\r\n    \"licenseNumber\": \"LIC-0002\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Medications",
+      "item": [
+        {
+          "name": "Get All Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "medications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Medication By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "medications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Medication",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Metoprolol\",\r\n  \"genericName\": \"Metoprolol Tartrate\",\r\n  \"description\": \"Beta blocker medication.\",\r\n  \"strength\": \"50 mg\",\r\n  \"dosageForm\": \"Tablet\",\r\n  \"manufacturer\": \"Generic Pharma\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/medications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "medications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Medication",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Aspirin\",\r\n  \"genericName\": \"Acetylsalicylic Acid\",\r\n  \"description\": \"Updated antiplatelet medication.\",\r\n  \"strength\": \"81 mg\",\r\n  \"dosageForm\": \"Tablet\",\r\n  \"manufacturer\": \"Bayer\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/medications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "medications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Medication",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "medications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient Medications",
+      "item": [
+        {
+          "name": "Get All Patient Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patientmedications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Medication By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patientmedications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient Medication",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"patientId\": 9999,\r\n  \"medicationId\": 2,\r\n  \"dosage\": \"50 mg\",\r\n  \"frequency\": \"Once daily\",\r\n  \"route\": \"Oral\",\r\n  \"startDate\": \"2026-08-10\",\r\n  \"endDate\": null,\r\n  \"status\": \"Active\",\r\n  \"notes\": \"Invalid patient test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patientmedications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient Medication",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dosage\": \"25 mg\",\r\n  \"frequency\": \"Once daily\",\r\n  \"route\": \"Oral\",\r\n  \"startDate\": \"2026-08-10\",\r\n  \"endDate\": null,\r\n  \"status\": \"Active\",\r\n  \"notes\": \"Updated dosage instructions\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patientmedications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient Medication",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patientmedications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patientmedications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Get All Appointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Appointment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"patientId\": 2,\r\n  \"doctorId\": 2,\r\n  \"appointmentDate\": \"2026-08-15T10:00:00Z\",\r\n  \"appointmentType\": \"Cardiology Consultation\",\r\n  \"status\": \"Scheduled\",\r\n  \"reason\": \"Routine cardiac follow-up\",\r\n  \"notes\": \"Bring previous medical reports\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"doctorId\": 2,\r\n  \"appointmentDate\": \"2026-08-15T11:00:00Z\",\r\n  \"appointmentType\": \"Cardiology Follow-up\",\r\n  \"status\": \"Completed\",\r\n  \"reason\": \"Routine cardiac follow-up\",\r\n  \"notes\": \"Follow-up completed successfully\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Appointment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vital Signs",
+      "item": [
+        {
+          "name": "Get All Vital Signs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vitalsigns"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vital Sign By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vitalsigns",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vital Sign",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"patientId\": 2,\r\n  \"heartRate\": 72,\r\n  \"systolicBloodPressure\": 120,\r\n  \"diastolicBloodPressure\": 80,\r\n  \"respiratoryRate\": 16,\r\n  \"temperature\": 36.8,\r\n  \"oxygenSaturation\": 98,\r\n  \"weight\": 75.5,\r\n  \"recordedAt\": \"2026-08-10T17:30:00Z\",\r\n  \"notes\": \"Normal vital signs\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vitalsigns"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vital Sign",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vitalsigns/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vitalsigns",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "RegisterPatient",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"patient3333@example.com\",\r\n  \"password\": \"Patient@123\",\r\n  \"medicalRecordNumber\": \"MRN-0003\",\r\n  \"firstName\": \"Ahmad\",\r\n  \"lastName\": \"Ali\",\r\n  \"dateOfBirth\": \"2000-05-15\",\r\n  \"gender\": \"Male\",\r\n  \"phone\": \"0599111111\",\r\n  \"address\": \"Hebron\",\r\n  \"emergencyContactName\": \"Mohammad Ali\",\r\n  \"emergencyContactPhone\": \"0599222222\",\r\n  \"medicalNotes\": \"No known allergies.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/patient",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                "patient"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"token\", response.token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"patient3@example.com\",\r\n  \"password\": \"Patient@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "assign-role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"doctor@example.com\",\r\n  \"role\": \"Doctor\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/Auth/assign-role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "Auth",
+                "assign-role"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RegisterDoctor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"doctor2@example.com\",\r\n    \"password\": \"Password123!\",\r\n    \"firstName\": \"Ahmad\",\r\n    \"lastName\": \"Ali\",\r\n    \"phone\": \"0599111111\",\r\n    \"specialization\": \"Cardiology\",\r\n    \"licenseNumber\": \"LIC-0002\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/doctor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                "doctor"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

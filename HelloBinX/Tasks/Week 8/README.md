@@ -1,82 +1,68 @@
-# Week 8 — Sprint 3: Advanced Queries, Caching & Performance
+# Week 8 — Advanced Queries & Performance
 
 ## Week Overview
 
-Week 8 begins **Sprint 3** of the Cardiac Patient Monitoring System.
+Week 8 focuses on **Sprint 3** of the Cardiac Patient Monitoring System.
 
-The sprint focuses on improving the existing API through advanced querying with LINQ, caching using Redis, and performance optimization.
+The sprint focuses on advanced Entity Framework Core queries, caching, and measurable performance tuning. The main goal is to identify real performance problems in the capstone project, fix them using appropriate techniques, and verify the improvement with actual measurements.
 
 **Status:** 🟡 In Progress  
-**Current Day:** Day 1 — Completed  
+**Current Day:** Day 2 — Completed  
 **Week Status:** In Progress
 
 ## Week Objectives
 
 During this week, the main goals are to:
 
-- Implement advanced LINQ-based queries.
-- Improve API data retrieval and response shaping.
-- Introduce caching using Redis.
-- Reduce unnecessary database work.
-- Improve API performance.
-- Measure and compare request execution times.
-- Apply performance-oriented backend practices to the Cardiac Patient Monitoring System.
+- Diagnose the N+1 query problem using EF Core query logging.
+- Fix N+1 issues using eager loading, projection, or split queries as appropriate.
+- Integrate Redis caching for frequently-read, rarely-changed data.
+- Implement correct cache invalidation.
+- Add appropriate database indexes and measure their effect.
+- Demonstrate performance improvements using real before/after measurements.
 
 ## Daily Progress
 
 | Day | Topic | Status |
 |---|---|---|
-| Day 1 | Advanced Queries & Appointment Summary | ✅ Completed |
-| Day 2 | Redis Caching | ⏳ Not Started |
-| Day 3 | Cache Integration & Invalidation | ⏳ Not Started |
-| Day 4 | Performance Tuning & Optimization | ⏳ Not Started |
-| Day 5 | Sprint Review, Testing & Retrospective | ⏳ Not Started |
+| Day 1 | Sprint 3 Planning & Diagnosing the N+1 Problem | ✅ Completed |
+| Day 2 | Query Optimization with Eager & Explicit Loading | ✅ Completed |
+| Day 3 | Introducing Redis Caching | ⏳ Not Started |
+| Day 4 | Database Indexing & Performance Profiling | ⏳ Not Started |
+| Day 5 | Sprint Review, Benchmark Demo & Retrospective | ⏳ Not Started |
 
 ---
 
 ## Day 1 — Completed
 
-### Advanced Appointment Queries & Summary Endpoint
+### Sprint 3 Planning & Diagnosing the N+1 Problem
 
-Day 1 focused on extending the existing **Appointments API** with an aggregated summary endpoint.
+Day 1 focused on Sprint 3 planning and identifying an actual N+1 query problem inside the Cardiac Patient Monitoring System.
 
-The goal was to provide a simplified response containing the important appointment information together with the related patient and doctor names.
+### Sprint 3 Goal
 
-### New Endpoint
+> Improve the measured performance of real capstone API endpoints by reducing unnecessary database queries and applying appropriate caching and database optimization techniques.
+
+### Selected Endpoint
+
+The endpoint selected for the N+1 investigation was:
 
 ```http
 GET /api/appointments/summary
 ```
 
-### Appointment Summary DTO
+The endpoint returns appointment summary information including:
 
-The endpoint returns an `AppointmentSummaryDto` containing:
+- Appointment ID
+- Appointment Date
+- Appointment Type
+- Status
+- Patient Name
+- Doctor Name
 
-- `AppointmentId`
-- `AppointmentDate`
-- `AppointmentType`
-- `Status`
-- `PatientName`
-- `DoctorName`
+### N+1 Problem
 
-This keeps the response focused on the information required by the summary instead of exposing the complete database entities.
-
-### Service Implementation
-
-The summary functionality was implemented inside:
-
-```text
-Services/
-└── AppointmentService.cs
-```
-
-A new asynchronous method was added:
-
-```csharp
-public async Task<IEnumerable<AppointmentSummaryDto>> GetSummaryAsync()
-```
-
-The method first retrieves the appointments using Entity Framework Core:
+The original implementation first loaded all appointments:
 
 ```csharp
 var appointments = await _context.Appointments
@@ -84,202 +70,312 @@ var appointments = await _context.Appointments
     .ToListAsync();
 ```
 
-`AsNoTracking()` is used because the summary operation only reads data and does not require EF Core change tracking.
-
-### Related Data
-
-For each appointment, the service retrieves the related:
-
-- Patient
-- Doctor
-
-and maps the required fields into an `AppointmentSummaryDto`.
-
-Patient and doctor names are constructed from their first and last names:
+Then, inside the loop, it queried the Patient and Doctor separately for every appointment:
 
 ```csharp
-PatientName = patient is null
-    ? "Unknown"
-    : $"{patient.FirstName} {patient.LastName}",
-
-DoctorName = doctor is null
-    ? "Unknown"
-    : $"{doctor.FirstName} {doctor.LastName}"
-```
-
-This also provides a fallback value when a related record cannot be found.
-
-### Controller Integration
-
-The endpoint is exposed through:
-
-```text
-Controllers/
-└── AppointmentsController.cs
-```
-
-The controller calls the appointment service and returns the generated summary:
-
-```http
-GET /api/appointments/summary
-```
-
-Successful requests return:
-
-```text
-200 OK
-```
-
-with the appointment summary collection.
-
----
-
-## API Testing
-
-The endpoint was tested using **Postman**.
-
-### Test Request
-
-```http
-GET /api/appointments/summary
-```
-
-### Result
-
-```text
-200 OK
-```
-
-The response successfully returned appointment summary objects containing:
-
-```json
+foreach (var appointment in appointments)
 {
-  "appointmentId": 2,
-  "appointmentDate": "2026-08-15T10:00:00Z",
-  "appointmentType": "Checkup",
-  "status": "Scheduled",
-  "patientName": "Ahmad Updated Ali",
-  "doctorName": "Ahmad Updated Ali"
+    var patient = await _context.Patients
+        .AsNoTracking()
+        .FirstOrDefaultAsync(p =>
+            p.PatientId == appointment.PatientId);
+
+    var doctor = await _context.Doctors
+        .AsNoTracking()
+        .FirstOrDefaultAsync(d =>
+            d.DoctorId == appointment.DoctorId);
+
+    // ...
 }
 ```
 
-Additional appointment records were also returned successfully.
+This created the classic N+1 pattern.
 
-### Database Verification
-
-The application successfully executed the required EF Core queries against the database.
-
-The application log confirmed queries against:
+With 6 appointments:
 
 ```text
-"Appointments"
-"Patients"
-"Doctors"
+1 query  → Appointments
+6 queries → Patients
+6 queries → Doctors
+
+Total = 13 SQL queries
 ```
 
-The request completed successfully with:
+### Query Logging
+
+EF Core SQL logging was already enabled in the development environment, allowing the actual SQL statements generated by the endpoint to be observed.
+
+The logs confirmed repeated queries against:
 
 ```text
-HTTP GET /api/appointments/summary responded 200
+Patients
+Doctors
 ```
 
-This confirms that the endpoint is correctly connected to the existing database and service layer.
+for individual appointment IDs.
+
+This provided the evidence required to confirm that the endpoint had a genuine N+1 problem rather than assuming that it was inefficient.
+
+### Day 1 Outcome
+
+- [x] Sprint 3 goal defined
+- [x] Performance problem investigated in a real endpoint
+- [x] `GET /api/appointments/summary` selected
+- [x] EF Core SQL logging used
+- [x] N+1 behavior confirmed
+- [x] Baseline query count recorded
+- [x] N+1 optimization added to the Day 2 task
 
 ---
 
-## Application Verification
+## Day 2 — Completed
 
-The API was successfully started using:
+### Query Optimization with Eager & Explicit Loading
 
-```bash
-dotnet run
-```
+Day 2 focused on fixing the N+1 problem identified on Day 1 and measuring the improvement.
 
-The application started successfully on:
+### Original Implementation
 
-```text
-http://localhost:5180
-```
+The original endpoint loaded appointments first and then performed two additional database queries for every appointment.
 
-The login endpoint was also verified successfully:
-
-```http
-POST /api/auth/login
-```
-
-Result:
+The baseline was:
 
 ```text
-200 OK
+13 SQL queries
 ```
 
-This confirmed that the existing authentication system continued to work correctly after the Day 1 changes.
+This was the performance problem targeted during Day 2.
 
----
+### Eager Loading with Include
 
-## Performance & Query Considerations
-
-The summary implementation uses:
+The first optimization used EF Core Eager Loading:
 
 ```csharp
-AsNoTracking()
+var appointments = await _context.Appointments
+    .Include(a => a.Doctor)
+    .Include(a => a.Patient)
+    .AsNoTracking()
+    .ToListAsync();
 ```
 
-for read-only database operations.
+The related entities were then accessed directly from the already-loaded appointment:
 
-This avoids unnecessary Entity Framework Core change tracking and is appropriate for query endpoints where returned entities are not modified.
+```csharp
+foreach (var appointment in appointments)
+{
+    var patient = appointment.Patient;
+    var doctor = appointment.Doctor;
 
-The endpoint also demonstrates how the service layer can transform database entities into a purpose-specific DTO before returning the response to the client.
+    // ...
+}
+```
 
-Further query optimization and caching will be addressed during the remaining Sprint 3 days.
+This removed the database calls from inside the loop.
+
+### Generated SQL
+
+EF Core translated the query into a single SQL statement using joins between:
+
+```text
+Appointments
+Patients
+Doctors
+```
+
+Conceptually:
+
+```sql
+SELECT ...
+FROM "Appointments" AS a
+INNER JOIN "Patients" AS p
+    ON a."PatientId" = p."PatientId"
+INNER JOIN "Doctors" AS d
+    ON a."DoctorId" = d."DoctorId"
+```
+
+### Query Count After Include
+
+The query count changed from:
+
+```text
+Before: 13 queries
+After:   1 query
+```
+
+This confirms that the N+1 problem was removed.
+
+### Projection as an Alternative
+
+Because `/api/appointments/summary` is a summary/list endpoint, the endpoint does not require complete Patient and Doctor entities.
+
+Projection was therefore tested as a leaner alternative:
+
+```csharp
+var result = await _context.Appointments
+    .AsNoTracking()
+    .Select(a => new AppointmentSummaryDto
+    {
+        AppointmentId = a.AppointmentId,
+        AppointmentDate = a.AppointmentDate,
+        AppointmentType = a.AppointmentType,
+        Status = a.Status,
+
+        PatientName = a.Patient == null
+            ? "Unknown"
+            : $"{a.Patient.FirstName} {a.Patient.LastName}",
+
+        DoctorName = a.Doctor == null
+            ? "Unknown"
+            : $"{a.Doctor.FirstName} {a.Doctor.LastName}"
+    })
+    .ToListAsync();
+```
+
+Projection directly selects the fields required by the DTO instead of loading the full related entities.
+
+### Include vs Projection
+
+For this endpoint:
+
+```text
+Include
+→ Loads complete Patient and Doctor entities.
+
+Projection
+→ Loads only the fields required by AppointmentSummaryDto.
+```
+
+The generated SQL for the Projection version selected only the required appointment, patient-name, and doctor-name fields.
+
+### Performance Measurement
+
+The endpoint was measured before and after optimization.
+
+| Version | SQL Queries | SQL Execution | HTTP Request |
+|---|---:|---:|---:|
+| Original N+1 | 13 | Multiple queries | 183 ms |
+| Include | 1 | 11 ms | 229 ms |
+| Projection | 1 | 7 ms | 199 ms |
+
+The most important improvement was the database query count:
+
+```text
+13 queries
+     ↓
+1 query
+```
+
+The Projection version also produced a smaller SELECT list because only the fields required by the summary DTO were selected.
+
+HTTP request timing was treated as supporting evidence because request time can vary between individual executions. The query count and generated SQL provided the clearest evidence of the optimization.
+
+### AsSplitQuery
+
+`AsSplitQuery()` was reviewed as part of the Day 2 material.
+
+It is useful when multiple collection navigation properties are included in the same query and a large JOIN could create a Cartesian-product explosion.
+
+The current `/api/appointments/summary` endpoint does not contain multiple collection navigation properties requiring split-query behavior.
+
+Therefore:
+
+```text
+AsSplitQuery → Not Applicable to the selected endpoint
+```
+
+No unnecessary implementation was added.
+
+### Day 2 Outcome
+
+- [x] N+1 problem fixed using `Include`
+- [x] Related Patient and Doctor entities loaded with the main query
+- [x] Query count reduced from 13 to 1
+- [x] Projection tested as an alternative
+- [x] Generated SQL compared
+- [x] Before/after measurements recorded
+- [x] `AsSplitQuery()` applicability reviewed
+- [x] No unnecessary split-query implementation added
 
 ---
 
-## Day 1 Outcome
+## Day 3 — Not Started
 
-- [x] Sprint 3 Day 1 completed
-- [x] Appointment summary functionality implemented
-- [x] `AppointmentSummaryDto` used for response shaping
-- [x] `GetSummaryAsync()` added to `AppointmentService`
-- [x] `GET /api/appointments/summary` implemented
-- [x] `AsNoTracking()` applied to read-only appointment queries
-- [x] Patient and doctor information included in the summary
-- [x] API tested successfully in Postman
-- [x] Endpoint returned `200 OK`
-- [x] Database queries executed successfully
-- [x] Existing authentication verified successfully
-- [x] Application runs successfully with `dotnet run`
+### Introducing Redis Caching
 
----
+Day 3 will focus on:
 
-## Evidence
+- Identifying suitable caching candidates.
+- Setting up Redis.
+- Using `IDistributedCache`.
+- Implementing the cache-aside pattern.
+- Handling cache invalidation correctly.
 
-Day 1 evidence includes:
-
-- Appointment service implementation.
-- Appointment summary DTO.
-- Appointments controller endpoint.
-- Successful `dotnet run` output.
-- EF Core database query logs.
-- Postman request and `200 OK` response for:
-  `GET /api/appointments/summary`
+**Status:** ⏳ Not Started
 
 ---
 
-## Next
+## Day 4 — Not Started
 
-Day 2 will continue Sprint 3 with **Redis caching** and integrating caching into the API to reduce repeated database queries and improve response performance.
+### Database Indexing & Performance Profiling
+
+Day 4 will focus on:
+
+- Identifying queries that benefit from indexes.
+- Adding appropriate database indexes.
+- Measuring the effect of indexing.
+- Profiling database performance.
+- Mentor Code Review.
+
+**Status:** ⏳ Not Started
 
 ---
 
-## Sprint 3 Progress
+## Day 5 — Not Started
+
+### Sprint Review, Benchmark Demo & Retrospective
+
+Day 5 will focus on:
+
+- Demonstrating measured performance improvements.
+- Reviewing completed Sprint 3 work.
+- Presenting before/after benchmark results.
+- Sprint Retrospective.
+- Defining an action item for Sprint 4.
+
+**Status:** ⏳ Not Started
+
+---
+
+## Week 8 Progress
 
 ```text
 Day 1  → ✅ Completed
-Day 2  → ⏳ Not Started
+Day 2  → ✅ Completed
 Day 3  → ⏳ Not Started
 Day 4  → ⏳ Not Started
 Day 5  → ⏳ Not Started
 ```
 
-**Sprint 3 — In Progress 🟡**
+**Week 8 / Sprint 3 — In Progress 🟡**
+
+## Current Sprint Summary
+
+The first two days of Sprint 3 focused on measurable EF Core query optimization.
+
+The N+1 problem in:
+
+```http
+GET /api/appointments/summary
+```
+
+was confirmed through actual SQL logging and reduced from:
+
+```text
+13 SQL queries → 1 SQL query
+```
+
+The endpoint was then compared using both Eager Loading with `Include` and Projection, with Projection producing a leaner SQL SELECT list for the summary use case.
+
+The remaining Sprint 3 work covers Redis caching, database indexing, performance profiling, and the final benchmark/demo.
+
+> Week 8 documentation will be updated as each remaining sprint day is completed.
