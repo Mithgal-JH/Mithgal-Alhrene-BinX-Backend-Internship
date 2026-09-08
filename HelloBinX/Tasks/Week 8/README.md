@@ -7,7 +7,7 @@ Week 8 focuses on **Sprint 3** of the Cardiac Patient Monitoring System.
 The sprint focuses on advanced Entity Framework Core queries, caching, and measurable performance tuning. The main goal is to identify real performance problems in the capstone project, fix them using appropriate techniques, and verify the improvement with actual measurements.
 
 **Status:** 🟡 In Progress  
-**Current Day:** Day 2 — Completed  
+**Current Day:** Day 3 — Completed  
 **Week Status:** In Progress
 
 ## Week Objectives
@@ -27,7 +27,7 @@ During this week, the main goals are to:
 |---|---|---|
 | Day 1 | Sprint 3 Planning & Diagnosing the N+1 Problem | ✅ Completed |
 | Day 2 | Query Optimization with Eager & Explicit Loading | ✅ Completed |
-| Day 3 | Introducing Redis Caching | ⏳ Not Started |
+| Day 3 | Introducing Redis Caching | ✅ Completed |
 | Day 4 | Database Indexing & Performance Profiling | ⏳ Not Started |
 | Day 5 | Sprint Review, Benchmark Demo & Retrospective | ⏳ Not Started |
 
@@ -298,19 +298,169 @@ No unnecessary implementation was added.
 
 ---
 
-## Day 3 — Not Started
+## Day 3 — Completed
 
 ### Introducing Redis Caching
 
-Day 3 will focus on:
+Day 3 focused on introducing Redis caching in the ASP.NET Core application using the `IDistributedCache` abstraction.
 
-- Identifying suitable caching candidates.
-- Setting up Redis.
-- Using `IDistributedCache`.
-- Implementing the cache-aside pattern.
-- Handling cache invalidation correctly.
+The implementation was applied to the **Patients** resource in the Cardiac Patient Monitoring System.
 
-**Status:** ⏳ Not Started
+### What Belongs in a Cache
+
+Good caching candidates are generally data that:
+
+- Is read frequently.
+- Changes relatively rarely.
+- Can tolerate a short period of cached data.
+
+The paginated Patients list endpoint was selected as the caching target.
+
+### Setting Up Redis with IDistributedCache
+
+Redis was integrated using the StackExchange.Redis-backed `IDistributedCache` implementation:
+
+```csharp
+builder.Services.AddStackExchangeRedisCache(options =>
+    options.Configuration =
+        builder.Configuration.GetConnectionString("Redis"));
+```
+
+A Redis connection multiplexer was also registered:
+
+```csharp
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(
+        builder.Configuration.GetConnectionString("Redis")!));
+```
+
+### Cache-Aside Pattern
+
+The Patients endpoint checks Redis first. On a cache miss, it queries the database, stores the result in Redis, and returns the result.
+
+The cache entries use a 10-minute expiration.
+
+The cache key includes:
+
+- Cache version.
+- Page number.
+- Page size.
+- Search value.
+- Gender filter.
+- Sort option.
+
+### Cache Invalidation on Writes
+
+Cache invalidation was implemented for all patient write operations:
+
+- Create
+- Update
+- Delete
+
+A Redis-based cache version is incremented after each successful write operation.
+
+Example:
+
+```csharp
+await _cacheVersionService.InvalidateAsync("patients");
+```
+
+The cache version was observed changing during testing:
+
+```text
+Cache version for patients incremented to 3
+Cache version for patients incremented to 4
+Cache version for patients incremented to 5
+```
+
+### Hands-On Lab Testing
+
+The Patients endpoint was tested using Postman and ASP.NET Core database logs.
+
+#### GET — Cache Miss
+
+The first request:
+
+```http
+GET /api/patients
+```
+
+executed PostgreSQL queries and responded in:
+
+```text
+HTTP GET /api/patients responded 200 in 783 ms
+```
+
+#### GET — Cache Hit
+
+The same request was sent again with no new Patients SELECT query:
+
+```text
+HTTP GET /api/patients responded 200 in 34 ms
+```
+
+This confirmed the cache hit.
+
+#### PUT — Cache Invalidation
+
+Patient `15` was updated:
+
+```http
+PUT /api/patients/15
+```
+
+The database executed an UPDATE and the cache version was incremented to `3`.
+
+```text
+HTTP PUT /api/patients/15 responded 200 in 494 ms
+```
+
+A subsequent GET executed new database queries, confirming that the previous cached result was invalidated. The following GET returned from cache again.
+
+#### POST — Cache Invalidation
+
+A new patient was created:
+
+```http
+POST /api/patients
+```
+
+The database executed an INSERT and the cache version was incremented to `4`.
+
+```text
+HTTP POST /api/patients responded 201 in 295 ms
+```
+
+A subsequent GET executed new database queries, confirming that the previous cached result was invalidated.
+
+#### DELETE — Cache Invalidation
+
+The test patient with `patientId = 17` was deleted:
+
+```http
+DELETE /api/patients/17
+```
+
+The database executed a DELETE and the cache version was incremented to `5`.
+
+```text
+HTTP DELETE /api/patients/17 responded 204 in 83 ms
+```
+
+This confirmed cache invalidation after deletion.
+
+### Day 3 Outcome
+
+- [x] Identified a suitable caching candidate.
+- [x] Configured Redis with `IDistributedCache`.
+- [x] Implemented the Cache-Aside Pattern.
+- [x] Added a 10-minute cache expiration.
+- [x] Added cache invalidation for patient creation.
+- [x] Added cache invalidation for patient updates.
+- [x] Added cache invalidation for patient deletion.
+- [x] Verified cache misses and cache hits using Postman.
+- [x] Verified database queries through ASP.NET Core console logs.
+- [x] Verified cache invalidation after write operations.
 
 ---
 
@@ -351,7 +501,7 @@ Day 5 will focus on:
 ```text
 Day 1  → ✅ Completed
 Day 2  → ✅ Completed
-Day 3  → ⏳ Not Started
+Day 3  → ✅ Completed
 Day 4  → ⏳ Not Started
 Day 5  → ⏳ Not Started
 ```
@@ -360,7 +510,7 @@ Day 5  → ⏳ Not Started
 
 ## Current Sprint Summary
 
-The first two days of Sprint 3 focused on measurable EF Core query optimization.
+The first three days of Sprint 3 focused on measurable EF Core query optimization and Redis caching.
 
 The N+1 problem in:
 
@@ -376,6 +526,8 @@ was confirmed through actual SQL logging and reduced from:
 
 The endpoint was then compared using both Eager Loading with `Include` and Projection, with Projection producing a leaner SQL SELECT list for the summary use case.
 
-The remaining Sprint 3 work covers Redis caching, database indexing, performance profiling, and the final benchmark/demo.
+Redis caching was then implemented for the Patients list endpoint using `IDistributedCache`, the Cache-Aside Pattern, and cache version invalidation on Create, Update, and Delete operations.
+
+The remaining Sprint 3 work covers database indexing, performance profiling, and the final benchmark/demo.
 
 > Week 8 documentation will be updated as each remaining sprint day is completed.
