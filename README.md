@@ -17,44 +17,11 @@ This repository contains my practical work, daily tasks, backend projects, docum
 | **5** | ASP.NET Core Backend Project | ✅ Completed |
 | **6** | Cardiac Patient Monitoring System | ✅ Completed |
 | **7** | Authentication & Authorization | ✅ Completed |
-| **8** | Advanced Queries, N+1 Problem & Performance Tuning | 🟡 In Progress |
+| **8** | Advanced Queries, N+1 Problem & Performance Tuning | ✅ Completed |
 
-**Progress:** 7 / 10 Weeks  
+**Progress:** 8 / 10 Weeks  
 **Track:** Backend Development (.NET)
 
+**Current:** Sprint 3 completed — Advanced Queries, Caching & Performance Tuning
+
 ---
-
-## 📁 Repository Structure
-
-```text
-HelloBinX/
-│
-├── README.md
-│
-├── Tasks/
-│   ├── README.md
-│   ├── Week 1/
-│   ├── Week 2/
-│   ├── Week 3/
-│   ├── Week 4/
-│   ├── Week 5/
-│   ├── Week 6/
-│   ├── Week 7/
-│   └── Week 8/
-│
-└── Projects/
-    ├── README.md
-    └── Cardiac-Patient-Monitoring-System/
-```
-
-### Tasks
-
-Contains the weekly internship tasks, exercises, and practical learning work.
-
-📂 [View Tasks](./HelloBinX/Tasks/README.md)
-
-### Projects
-
-Contains the practical backend projects developed during the internship.
-
-📂 [View Projects](./HelloBinX/Projects/README.md)
