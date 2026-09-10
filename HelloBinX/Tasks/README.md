@@ -15,7 +15,7 @@ This section contains my **weekly internship tasks**, practical exercises, and l
 | **5** | Testing, Error Handling & Project Begins     | ✅ Completed | [View Week 5](./Week%205/README.md) |
 | **6** | Phase 3 Sprint 1 — Applied Project Work      | ✅ Completed | [View Week 6](./Week%206/README.md) |
 | **7** | Phase 3 Sprint 2 — Authentication & Authorization | ✅ Completed | [View Week 7](./Week%207/README.md) |
-| **8** | Phase 3 Sprint 3 — Advanced Queries & Performance | 🟡 In Progress | [View Week 8](./Week%208/README.md) |
+| **8** | Phase 3 Sprint 3 — Advanced Queries & Performance | ✅ Completed | [View Week 8](./Week%208/README.md) |
 
 ---
 
@@ -198,7 +198,7 @@ Week 7 focused on implementing Authentication and Authorization in the Cardiac P
 
 ### Week 8 — Phase 3 Sprint 3 — Advanced Queries & Performance
 
-Week 8 focuses on advanced database querying and performance tuning in the Cardiac Patient Monitoring System.
+Week 8 focused on advanced database querying, caching, indexing, and performance tuning in the Cardiac Patient Monitoring System.
 
 **Main topics:**
 
@@ -217,96 +217,45 @@ Week 8 focuses on advanced database querying and performance tuning in the Cardi
 
 **Day 1:** Advanced Queries & N+1 Problem — ✅ Completed
 
-Day 1 included:
+- Implemented the appointment summary endpoint.
+- Identified and verified the N+1 query problem using EF Core SQL logging.
+- Reduced the appointment summary retrieval from **13 SQL queries to 1 query** using optimized EF Core querying.
 
-- Implemented an appointment summary endpoint.
-- Demonstrated a real N+1 query scenario using EF Core navigation properties.
-- Verified the generated SQL queries through EF Core logging.
-- Observed the repeated Patient and Doctor queries for appointment records.
-- Tested the endpoint through the running API.
-- Confirmed the endpoint returned `200 OK`.
-- Documented the observed N+1 behavior for mentor review.
+**Day 2:** LINQ & EF Core Query Optimization — ✅ Completed
+
+- Compared the original N+1 implementation with `Include()` and DTO projection.
+- Verified that both optimized approaches execute a single SQL query.
+- Projection provided the leaner query for the summary endpoint.
+
+**Day 3:** Redis Caching — ✅ Completed
+
+- Implemented Cache-Aside caching using `IDistributedCache` and Redis.
+- Added versioned cache keys and cache invalidation on patient create/update/delete.
+- Verified cache misses and hits through API timings and database query logs.
+- Observed a reduction from **783 ms to 34 ms** on the measured repeated request.
+
+**Day 4:** Database Indexing & Performance Profiling — ✅ Completed
+
+- Seeded 1,000 synthetic Patient records for profiling.
+- Added/verified a composite index on `Gender` and `DateOfBirth`.
+- Used `EXPLAIN (ANALYZE, BUFFERS)` to compare query plans.
+- Verified the change from **Seq Scan** to **Index Scan**.
+- Measured execution time improvement from **0.259 ms to 0.102 ms (~60.6% reduction)**.
+
+**Day 5:** Sprint Review, Benchmark Demo & Retrospective — ✅ Completed
+
+- Reviewed the Sprint 3 acceptance criteria and completed work.
+- Consolidated before/after performance evidence from Days 1–4.
+- Documented the Sprint 3 retrospective.
+- Defined Sprint 4 follow-up work, including automated query-count regression coverage to help prevent N+1 regressions.
 
 📂 **Documentation:**  
 [View Week 8](./Week%208/README.md)
 
 ---
 
-## 📁 Tasks Structure
-
-```text
-Tasks/
-│
-├── README.md
-│
-├── Week 1/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 2/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 3/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 4/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 5/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 6/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-├── Week 7/
-│   ├── README.md
-│   ├── Day 1/
-│   ├── Day 2/
-│   ├── Day 3/
-│   ├── Day 4/
-│   └── Day 5/
-│
-└── Week 8/
-    ├── README.md
-    └── Day 1/
-        ├── README.md
-        ├── Cardiac-Patient-Monitoring-System/
-        └── Sprint3_Cardiac_Patient_Monitoring_System.pdf
-```
-
----
-
 ## 🚀 Internship Progress
 
-**Weeks Completed:** 7 / 10  
-**Current:** Week 8 — Day 1 Completed  
+**Weeks Completed:** 8 / 10  
+**Current:** Week 8 — Completed  
 **Track:** Backend Development (.NET)

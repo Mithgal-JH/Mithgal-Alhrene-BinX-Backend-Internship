@@ -28,8 +28,8 @@ During this week, the main goals are to:
 | Day 1 | Sprint 3 Planning & Diagnosing the N+1 Problem | ✅ Completed |
 | Day 2 | Query Optimization with Eager & Explicit Loading | ✅ Completed |
 | Day 3 | Introducing Redis Caching | ✅ Completed |
-| Day 4 | Database Indexing & Performance Profiling | ⏳ Not Started |
-| Day 5 | Sprint Review, Benchmark Demo & Retrospective | ⏳ Not Started |
+| Day 4 | Database Indexing & Performance Profiling | ✅ Completed |
+| Day 5 | Sprint Review, Benchmark Demo & Retrospective | ✅ Completed |
 
 ---
 
@@ -464,35 +464,143 @@ This confirmed cache invalidation after deletion.
 
 ---
 
-## Day 4 — Not Started
+## Day 4 — Completed
 
 ### Database Indexing & Performance Profiling
 
-Day 4 will focus on:
+Day 4 focused on improving database query performance using PostgreSQL indexing and `EXPLAIN (ANALYZE, BUFFERS)`.
 
-- Identifying queries that benefit from indexes.
-- Adding appropriate database indexes.
-- Measuring the effect of indexing.
-- Profiling database performance.
-- Mentor Code Review.
+### Dataset
 
-**Status:** ⏳ Not Started
+A synthetic dataset of **1,000 Patient records** was used for performance profiling.
+
+### Composite Index
+
+The following composite index was added for the Patients filtering and ordering pattern:
+
+```sql
+CREATE INDEX "IX_Patients_Gender_DateOfBirth"
+ON public."Patients" USING btree ("Gender", "DateOfBirth");
+```
+
+### Profiled Query
+
+```sql
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT *
+FROM "Patients"
+WHERE "Gender" = 'Male'
+ORDER BY "DateOfBirth"
+LIMIT 10 OFFSET 0;
+```
+
+### Before Index Usage
+
+The query plan used:
+
+```text
+Seq Scan on Patients
+Rows Removed by Filter: 507
+Execution Time: 0.259 ms
+```
+
+### After Index Usage
+
+The query plan changed to:
+
+```text
+Index Scan using IX_Patients_Gender_DateOfBirth
+Index Cond: (Gender = 'Male')
+Buffers: shared hit=11
+Execution Time: 0.102 ms
+```
+
+### Performance Result
+
+```text
+0.259 ms → 0.102 ms
+≈60.6% reduction in captured execution time
+```
+
+The main evidence was the execution-plan change from **Seq Scan → Index Scan**. The exact timing is environment-dependent and should be treated as a local benchmark.
+
+### Day 4 Outcome
+
+- [x] Added PostgreSQL composite index
+- [x] Seeded 1,000 synthetic Patient records
+- [x] Profiled query using `EXPLAIN (ANALYZE, BUFFERS)`
+- [x] Compared execution plans before and after index usage
+- [x] Recorded before/after execution time
+- [x] Verified `Seq Scan → Index Scan`
+- [x] Completed performance profiling
 
 ---
 
-## Day 5 — Not Started
+## Day 5 — Completed
 
 ### Sprint Review, Benchmark Demo & Retrospective
 
-Day 5 will focus on:
+Day 5 closed Sprint 3 by consolidating the actual performance evidence from Days 1–4, reviewing Sprint 3 acceptance criteria, recording remaining work, and defining a concrete Sprint 4 action.
 
-- Demonstrating measured performance improvements.
-- Reviewing completed Sprint 3 work.
-- Presenting before/after benchmark results.
-- Sprint Retrospective.
-- Defining an action item for Sprint 4.
+### Before / After Benchmark Summary
 
-**Status:** ⏳ Not Started
+| Performance Area | Before | After | Result |
+|---|---:|---:|---|
+| Appointment Summary / N+1 | 13 SQL queries | 1 SQL query | ≈92.3% fewer database queries |
+| Appointment Summary / Projection | 13 SQL queries | 1 query; 7 ms SQL | Lean DTO-oriented query |
+| Redis Cache | 783 ms cache miss | 34 ms cache hit | ≈95.7% lower observed response time |
+| Redis Repeated Hit | 16 ms cache miss | 3 ms cache hit | 81.25% lower observed response time |
+| Patients Index | Seq Scan; 0.259 ms | Index Scan; 0.102 ms | ≈60.6% lower captured execution time |
+
+### Sprint Review
+
+The main Sprint 3 technical objectives were completed:
+
+- [x] N+1 problem identified and removed.
+- [x] Appointment summary reduced from 13 SQL queries to 1.
+- [x] EF Core `Include` and Projection compared.
+- [x] Redis Cache-Aside implemented.
+- [x] Redis cache hit/miss behavior verified.
+- [x] Cache invalidation verified after Patient Create, Update, and Delete.
+- [x] PostgreSQL composite index added.
+- [x] Index performance verified with `EXPLAIN (ANALYZE, BUFFERS)`.
+- [x] Before/after performance evidence documented.
+
+### Sprint 4 Backlog
+
+The remaining process-level close-out item and the main regression-protection opportunity were recorded for Sprint 4:
+
+1. Complete the formal Sprint 3 GitHub Pull Request / review / merge flow.
+2. Add automated regression coverage for the appointment-summary query count to prevent the N+1 pattern from returning.
+
+### Retrospective
+
+**What went well:**
+
+- Performance work was based on actual application behavior and measurable evidence.
+- EF Core SQL logging made the N+1 problem directly observable.
+- Query count and generated SQL were used as stronger evidence than timing alone.
+- Redis caching included invalidation for Create, Update, and Delete operations.
+- PostgreSQL execution plans were used to validate the indexing improvement.
+
+**What needs improvement:**
+
+- Complete the formal GitHub PR/review/merge process as part of sprint close-out.
+- Convert important manual performance checks into automated regression tests where practical.
+- Continue interpreting timing alongside structural evidence such as query counts and execution plans.
+
+**One concrete Sprint 4 action:**
+
+> Add an automated performance-regression test that verifies the appointment summary path does not reintroduce the N+1 pattern and keeps the related-data query count at the optimized level.
+
+### Day 5 Outcome
+
+- [x] Demonstrated before/after performance evidence
+- [x] Completed Sprint Review
+- [x] Recorded Sprint 4 backlog items
+- [x] Completed Sprint Retrospective
+- [x] Defined one concrete Sprint 4 action
+- [x] Closed the technical work of Sprint 3
 
 ---
 
@@ -502,15 +610,15 @@ Day 5 will focus on:
 Day 1  → ✅ Completed
 Day 2  → ✅ Completed
 Day 3  → ✅ Completed
-Day 4  → ⏳ Not Started
-Day 5  → ⏳ Not Started
+Day 4  → ✅ Completed
+Day 5  → ✅ Completed
 ```
 
-**Week 8 / Sprint 3 — In Progress 🟡**
+**Week 8 / Sprint 3 — Completed 🟢**
 
 ## Current Sprint Summary
 
-The first three days of Sprint 3 focused on measurable EF Core query optimization and Redis caching.
+Sprint 3 focused on measurable performance improvements across EF Core query optimization, Redis caching, and PostgreSQL indexing.
 
 The N+1 problem in:
 
@@ -524,10 +632,19 @@ was confirmed through actual SQL logging and reduced from:
 13 SQL queries → 1 SQL query
 ```
 
-The endpoint was then compared using both Eager Loading with `Include` and Projection, with Projection producing a leaner SQL SELECT list for the summary use case.
+The endpoint was compared using both Eager Loading with `Include` and Projection. Projection produced a leaner SQL SELECT list for the summary use case.
 
-Redis caching was then implemented for the Patients list endpoint using `IDistributedCache`, the Cache-Aside Pattern, and cache version invalidation on Create, Update, and Delete operations.
+Redis caching was implemented for the Patients list endpoint using `IDistributedCache`, the Cache-Aside Pattern, a 10-minute expiration, and cache version invalidation on Create, Update, and Delete operations.
 
-The remaining Sprint 3 work covers database indexing, performance profiling, and the final benchmark/demo.
+PostgreSQL indexing was then applied to the Patients filtering and ordering pattern. Profiling showed:
 
-> Week 8 documentation will be updated as each remaining sprint day is completed.
+```text
+Seq Scan → Index Scan
+0.259 ms → 0.102 ms
+```
+
+Sprint 3 was closed with a Sprint Review, before/after benchmark summary, Sprint 4 backlog handoff, and retrospective.
+
+The main Sprint 4 action is to automate the appointment-summary query-count check so that an N+1 regression is detected automatically.
+
+> Week 8 / Sprint 3 documentation is complete.
